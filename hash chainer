@@ -1,0 +1,224 @@
+//hashtable that uses chaining to sort words
+public class chainer {
+	private class entry {  //innerclass for table
+		private int key; //the key for the word
+		private String value; //the word
+		private entry next; //the next word with the same key
+		
+		public entry(int key, String value, entry next) { //creates the entry
+			this.key = key;
+			this.value = value;
+			this.next = next;
+		}
+	}
+	
+	private entry[] table; //the table of words
+	private int size; //the size of the table
+	private int count; //the number of distinct words
+	private int total; //the total words checked
+	private int probes; //the number of probes
+	private int in_size = 10000; //used to set the size
+	
+	public chainer() { //initializes the variables
+		this.size = in_size;
+		this.count = 0;
+		this.total = 0;
+		this.probes = 0;
+		this.table = new entry[size];
+	}
+	
+	public int hasher_a(String value) { //creates a key by adding the chars based on their place
+		int key = 0; //sets key to zero
+		int times = 1; //sets times to one
+		for(int i = 0; i < value.length(); i++) { //moves through the word
+			char let = value.charAt(i);
+			
+			if(let == '–') { //this char is over 131 so it is counted as 99 for the key
+				key += 99 * times;
+			}
+			else if(let == '—') { //this char is over 131 so it is counted as 98 for the key
+				key += 98 * times;
+			}
+			else if(let == '½') { //this char is over 131 so it is counted as 97 for the key
+				key += 97 * times;
+			}
+			else {
+				key += ((int)let - 32) * times;  //adds char based on place
+			}
+			
+			times = times * 10;
+		}
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		//example key: J = 42, o = 79, h = 72, n = 78, so John = 42 + 790 + 7200 + 78000 = 86032 or 6032
+		return key;
+	}
+	
+	public int hasher_b(String value) { //creates a key with each char multiplied together
+		int key = 1; //sets key to one
+		
+		for(int i = 0; i < value.length(); i++) { //moves through the word
+			char let = value.charAt(i);
+			
+			if(let == '–') { //this char is over 131 so it is counted as 99 for the key
+				key = 99 * key;
+			}
+			else if(let == '—') { //this char is over 131 so it is counted as 98 for the key
+				key = 98 * key;
+			}
+			else if(let == '½') { //this char is over 131 so it is counted as 97 for the key
+				key = 97 * key;
+			}
+			else {
+				key = ((int)let - 32) * key;  //multiplies key by char value
+			}
+		}
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		//key example: A = 33, n = 78, so Ann = 33*78*78 = 200772 or 772
+		return key; //returns key
+	}
+	
+	public int hasher_c(String value) { //creates a key buy adding the chars squared
+		int key = 0; //sets key to zero
+		// * i * i * i * i
+		for(int i = 0; i < value.length(); i++) { //moves through the word
+			char let = value.charAt(i);
+			
+			if(let == '–') { //this char is over 131 so it is counted as 99 for the key
+				key += 99 * 99;
+			}
+			else if(let == '—') { //this char is over 131 so it is counted as 98 for the key
+				key += 98 * 98;
+			}
+			else if(let == '½') { //this char is over 131 so it is counted as 97 for the key
+				key += 97 * 97;
+			}
+			else {
+				key += ((int)let - 32) * ((int)let - 32);  //adds char squared
+			}
+		}
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		//example key: F = 38, r = 82, a = 65, n = 78, k = 75, so Frank = (38^2) + (82^2) + (65^2) + (78^2) + (75^2) = 24102 or 4102
+		return key;
+	}
+	
+	public int hasher_d(String value) { //standard hasher made to fit in the table
+		int key = value.hashCode();
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		
+		return key;
+	}
+	
+	public void readfile(String file, int type) throws FileNotFoundException {
+		Scanner read = new Scanner(new File(file)); //creates the reader for the file
+		
+		while(read.hasNext()) { //reads all words in the file
+			String value = read.next();
+			
+			boolean cont = insert(value, type); //tries to insert every word
+			
+			if(cont == false) { //if over distinct word limit break
+				break;
+			}
+		}
+		
+		read.close();
+	}
+	
+	public boolean insert(String value, int type) {
+		int key;
+		boolean cont = true;
+		if(type == 1) { //performs the hash based on keyboard input
+			key = hasher_a(value);
+		}
+		else if(type == 2) {
+			key = hasher_b(value);
+		}
+		else if(type == 3) {
+			key = hasher_c(value);
+		}
+		else {
+			key = hasher_d(value);
+		}
+		
+		entry temp = table[key]; //sets the pointer to key
+		probes++;
+		total++;
+		boolean dis = true; //stores if word is distinct
+		
+		while(temp != null) { //goes through chain
+			probes++;
+			if(value.equals(temp.value)) { //if word is in chain discard it
+				dis = false;
+				//leave word if found
+				break;
+			}
+			else { //continues on until empty link
+				temp = temp.next;
+				probes++;
+			}
+		}
+		
+		if(dis) { //if  distinct word put in chain
+			table[key] = new entry(key, value, table[key]);
+			probes++;
+			count++;
+		}
+		
+		if(count >= 10000) { //in over distinct word limit stop adding words
+			cont = false;
+		}
+		
+		return cont;
+	}
+	
+	public void writefile(String file) throws FileNotFoundException { //writes words to file
+		PrintWriter write = new PrintWriter(new File(file)); //creates the reader for the file
+		entry temp;
+		
+		for(int i = 0; i < 10000; i++) { //goes through all of table
+			temp = table[i]; //puts pointer at current spot in table
+			
+			while(temp != null) { //follows chain down and writes values to file
+				write.println(temp.value);
+				temp = temp.next;
+				
+			}
+		}
+		
+		write.close();
+		//prints out the count, total, probes, and average number of probes;
+		System.out.println("The total number of distinct words is: " + count);
+		System.out.println("The total number of words processed in the file is: " + total);
+		System.out.println("The total number of probes is: " + probes);
+		double avgprobes = (double)probes / (double)total;
+		System.out.println("The average number of probes is: " + avgprobes);
+	}
+	
+	public void clear() { //clears everything for auto run
+		this.size = in_size;
+		this.count = 0;
+		this.total = 0;
+		this.probes = 0;
+		this.table = new entry[size];
+	}
+}
