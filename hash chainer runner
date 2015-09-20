@@ -1,0 +1,71 @@
+//runs the chain hashtable
+public class chainrun {
+	//main method for runner
+	public static void main(String[] args) throws FileNotFoundException {
+		Scanner keyboard = new Scanner(System.in); //creates keyboard scanner
+		chainer chnr = new chainer(); //creates chainer to test
+		
+		System.out.println("Auto run or manual run: (auto, manual)");
+		String mod = keyboard.next(); //checks for manual use or auto use
+		
+		if(mod.equalsIgnoreCase("manual")) { //manual use
+			System.out.println("Enter the name of the input file: ");
+			String infile = keyboard.next(); //asks for the input file
+			
+			System.out.println("Enter the name of the output file: ");
+			String outfile = keyboard.next(); //asks for the output file
+			
+			System.out.println("Enter the hash type: (1 - 4)");
+			int type = keyboard.nextInt(); //asks for the hash type
+			//1 - 3 are mine 4 
+			
+			long statm = System.currentTimeMillis();
+			chnr.readfile(infile, type);
+			chnr.writefile(outfile);
+			long endtm = System.currentTimeMillis();
+			
+			long tottm = endtm - statm;
+			
+			System.out.println("The total time is: " + tottm);
+		}
+		else {
+			for(int i = 1; i <= 5; i++) {
+				for(int j = 1; j <= 4; j++) {
+					String infile = "file" + i + ".txt";
+					char let = 'x';
+					
+					if(j == 1) {
+						let = 'a';
+					}
+					else if(j == 2) {
+						let = 'b';
+					}
+					else if(j == 3) {
+						let = 'c';
+					}
+					else {
+						let = 'd';
+					}
+					
+					String outfile = "output" + i + let + ".txt";
+					
+					System.out.println("Running hash " + j + " for file " + infile);
+					
+					long statm = System.currentTimeMillis();
+					chnr.readfile(infile, j);
+					chnr.writefile(outfile);
+					long endtm = System.currentTimeMillis();
+					
+					long tottm = endtm - statm;
+					
+					System.out.println("The total time is: " + tottm);
+					System.out.println();
+					
+					chnr.clear();
+				}
+			}
+		}
+		
+	}
+
+}
