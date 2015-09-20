@@ -1,0 +1,259 @@
+public class biner {
+	private class entry {  //innerclass for table
+		private int key; //the key for the word
+		private String value; //the word
+		private entry left; //the next word with a smaller key
+		private entry right; //the next word with a bigger key
+		
+		public entry(int key, String value, entry left, entry right) { //creates the entry
+			this.key = key;
+			this.value = value;
+			this.left = left;
+			this.right = right;
+		}
+	}
+	
+	private entry root;
+	private int count; //the number of distinct words
+	private int total; //the total words checked
+	private int probes; //the number of probes
+	
+	public biner() { //initializes the variables
+		this.root = null;
+		this.count = 0;
+		this.total = 0;
+		this.probes = 0;
+	}
+	
+	public int hasher_a(String value) { //creates a key by adding the chars based on their place
+		int key = 0; //sets key to zero
+		int times = 1; //sets times to one
+		for(int i = 0; i < value.length(); i++) { //moves through the word
+			char let = value.charAt(i);
+			
+			if(let == '–') { //this char is over 131 so it is counted as 99 for the key
+				key += 99 * times;
+			}
+			else if(let == '—') { //this char is over 131 so it is counted as 98 for the key
+				key += 98 * times;
+			}
+			else if(let == '½') { //this char is over 131 so it is counted as 97 for the key
+				key += 97 * times;
+			}
+			else {
+				key += ((int)let - 32) * times;  //adds char based on place
+			}
+			
+			times = times * 10;
+		}
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		//example key: J = 42, o = 79, h = 72, n = 78, so John = 42 + 790 + 7200 + 78000 = 86032 or 6032
+		return key;
+	}
+	
+	public int hasher_b(String value) { //creates a key with each char multiplied together
+		int key = 1; //sets key to one
+		
+		for(int i = 0; i < value.length(); i++) { //moves through the word
+			char let = value.charAt(i);
+			
+			if(let == '–') { //this char is over 131 so it is counted as 99 for the key
+				key = 99 * key;
+			}
+			else if(let == '—') { //this char is over 131 so it is counted as 98 for the key
+				key = 98 * key;
+			}
+			else if(let == '½') { //this char is over 131 so it is counted as 97 for the key
+				key = 97 * key;
+			}
+			else {
+				key = ((int)let - 32) * key;  //multiplies key by char value
+			}
+		}
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		//key example: A = 33, n = 78, so Ann = 33*78*78 = 200772 or 772
+		return key; //returns key
+	}
+	
+	public int hasher_c(String value) { //creates a key buy adding the chars squared
+		int key = 0; //sets key to zero
+		// * i * i * i * i
+		for(int i = 0; i < value.length(); i++) { //moves through the word
+			char let = value.charAt(i);
+			
+			if(let == '–') { //this char is over 131 so it is counted as 99 for the key
+				key += 99 * 99;
+			}
+			else if(let == '—') { //this char is over 131 so it is counted as 98 for the key
+				key += 98 * 98;
+			}
+			else if(let == '½') { //this char is over 131 so it is counted as 97 for the key
+				key += 97 * 97;
+			}
+			else {
+				key += ((int)let - 32) * ((int)let - 32);  //adds char squared
+			}
+		}
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		//example key: F = 38, r = 82, a = 65, n = 78, k = 75, so Frank = (38^2) + (82^2) + (65^2) + (78^2) + (75^2) = 24102 or 4102
+		return key;
+	}
+	
+	public int hasher_d(String value) { //standard hasher made to fit in the table
+		int key = value.hashCode();
+		//corrects key if too big or small
+		if(key < 0) {
+			key = key * (-1);
+		}
+		
+		key = key % 10000;
+		
+		return key;
+	}
+	
+	public void readfile(String file, int type) throws FileNotFoundException {
+		Scanner read = new Scanner(new File(file)); //creates the reader for the file
+		
+		while(read.hasNext()) { //reads all words in the file
+			String value = read.next();
+			
+			boolean cont = insert(value, type); //tries to insert every word
+			
+			if(cont == false) { //if over distinct word limit break
+				break;
+			}
+		}
+		
+		read.close();
+	}
+	
+	public boolean insert(String value, int type) {
+		int key;
+		boolean cont = true;
+		if(type == 1) { //performs the hash based on keyboard input
+			key = hasher_a(value);
+		}
+		else if(type == 2) {
+			key = hasher_b(value);
+		}
+		else if(type == 3) {
+			key = hasher_c(value);
+		}
+		else {
+			key = hasher_d(value);
+		}
+		
+		
+		probes++;
+		total++;
+		
+		if(root == null) { //checks if root is empty
+			root = new entry(key, value, null, null);
+			count++;
+		}
+		else if((value.equals(root.value)) == false){
+			entry temp = root; //sets the pointer to root
+			boolean move = true;
+			while(move) {
+				if(key <= temp.key) {
+					entry next = temp.left;
+					probes++;
+					if(next == null) {
+						temp.left = new entry(key, value, null, null);
+						count++;
+						probes++;
+						move = false;
+						break;
+					}
+					else if(value.equals(next.value)) {
+						
+						move = false;
+						break;
+					}
+					else {
+						temp = next;
+						probes++;
+					}
+				}
+				else {
+					entry next = temp.right;
+					probes++;
+					if(next == null) {
+						temp.right = new entry(key, value, null, null);
+						count++;
+						probes++;
+						move = false;
+						break;
+					}
+					else if(value.equals(next.value)) {
+						
+						move = false;
+						break;
+					}
+					else {
+						temp = next;
+						probes++;
+					}
+				}
+			}
+		}
+		
+		
+		if(count >= 10000) { //in over distinct word limit stop adding words
+			cont = false;
+		}
+		
+		return cont;
+	}
+	
+	
+	private PrintWriter write; //creates writer for entire class for recursion
+	
+	public void writefile(String file) throws FileNotFoundException { //writes words to file
+		write = new PrintWriter(new File(file)); //creates the reader for the file
+		
+		writing(root); //starts the writing recursion
+		
+		write.close();
+		//prints out the count, total, probes, and average number of probes;
+		System.out.println("The total number of distinct words is: " + count);
+		System.out.println("The total number of words processed in the file is: " + total);
+		System.out.println("The total number of probes is: " + probes);
+		double avgprobes = (double)probes / (double)total;
+		System.out.println("The average number of probes is: " + avgprobes);
+	}
+	
+	public void writing(entry temp) { //writing recursion
+		if(temp != null) { //if there is a word stored here
+			writing(temp.left); //write smaller key word first
+			write.println(temp.value); //then write this word
+			writing(temp.right); //then write bigger word
+		}
+	}
+	
+	public void otherwrt(entry temp, int num) {
+		
+	}
+	
+	public void clear() {
+		this.root = null;
+		this.count = 0;
+		this.total = 0;
+		this.probes = 0;
+	}
+}
