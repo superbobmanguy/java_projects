@@ -1,0 +1,70 @@
+//runs the binary tree for hashtable
+public class binrun {
+	//main method for runner
+	public static void main(String[] args) throws FileNotFoundException {
+		Scanner keyboard = new Scanner(System.in); //creates keyboard scanner
+		biner binr = new biner(); //creates biner to test
+		
+		System.out.println("Auto run or manual run: (auto, manual)");
+		String mod = keyboard.next(); //checks for manual use or auto use
+		
+		if(mod.equalsIgnoreCase("manual")) { //manual use
+			System.out.println("Enter the name of the input file: ");
+			String infile = keyboard.next(); //asks for the input file
+			
+			System.out.println("Enter the name of the output file: ");
+			String outfile = keyboard.next(); //asks for the output file
+			
+			System.out.println("Enter the hash type: (1 - 4)");
+			int type = keyboard.nextInt(); //asks for the hash type
+			//1 - 3 are mine 4 
+			
+			long statm = System.currentTimeMillis();
+			binr.readfile(infile, type);
+			binr.writefile(outfile);
+			long endtm = System.currentTimeMillis();
+			
+			long tottm = endtm - statm;
+			
+			System.out.println("The total time is: " + tottm);
+		}
+		else {
+			for(int i = 1; i <= 5; i++) {
+				for(int j = 1; j <= 4; j++) {
+					String infile = "file" + i + ".txt";
+					char let = 'x';
+					
+					if(j == 1) {
+						let = 'a';
+					}
+					else if(j == 2) {
+						let = 'b';
+					}
+					else if(j == 3) {
+						let = 'c';
+					}
+					else {
+						let = 'd';
+					}
+					
+					String outfile = "output" + i + let + ".txt";
+					
+					System.out.println("Running hash " + j + " for file " + infile);
+					
+					long statm = System.currentTimeMillis();
+					binr.readfile(infile, j);
+					binr.writefile(outfile);
+					long endtm = System.currentTimeMillis();
+					
+					long tottm = endtm - statm;
+					
+					System.out.println("The total time is: " + tottm);
+					System.out.println();
+					
+					binr.clear();
+				}
+			}
+		}
+		
+	}
+}
