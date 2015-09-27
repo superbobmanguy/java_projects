@@ -1,0 +1,34 @@
+import java.util.*;
+import java.io.*;
+
+
+public class population {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("What is your current population: ");
+		int pop_start = scan.nextInt();
+		System.out.println("What is your max population: ");
+		int pop_max = scan.nextInt();
+		int pop_diff = pop_max - pop_start;
+		int per_month = 0;
+		int time = 0;
+		
+		while(pop_diff > (pop_max * 0.1)) {
+			per_month = (int)(pop_diff * 0.01);
+			if(per_month < 0) {
+				per_month = 1;
+			}
+			pop_start += per_month;
+			pop_diff = pop_max - pop_start;
+			time++;
+		}
+		int years = time / 12;
+		
+		System.out.println("it will take " + time + " months or " + years + " years");
+	}
+
+}
