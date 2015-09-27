@@ -1,0 +1,202 @@
+
+public class bookscustomers {
+	//customer node
+	private class customernode {
+		//customer variables
+		private String name;
+		private int copies;
+		private customernode next;
+		//initializer
+		private customernode(String name, int copies, customernode next) {
+			this.name = name;
+			this.copies = copies;
+			this.next = next;
+		}
+	}
+	//book node
+	private class booknode {
+		//book variables
+		private String title;
+		private double price;
+		private int sold;
+		private customernode list;
+		private booknode next;
+		//initializer
+		private booknode(String title, double price, int sold, customernode list, booknode next) {
+			this.title = title;
+			this.price = price;
+			this.sold = sold;
+			this.list = list;
+			this.next = next;
+		}
+	}
+	//create the book head
+	private booknode head;
+	//initialize the book head
+	public bookscustomers() {
+		head = null;
+	}
+	//adds a book
+	public void addbook(String title, double price) {
+		boolean found = false;
+		//checks if book already exists
+		for(booknode temp = head; temp != null; temp = temp.next) {
+			if(temp.title.equals(title)) {
+				//stores if book exists
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			//creates the book if it doesn't exist
+			head = new booknode(title, price, 0, null, head);
+		}
+		else {
+			//informs the user if the book exists
+			System.out.println("The title is already in book list.");
+		}
+	}
+	//orders a book
+	public void orderbook(String title, String name, int copies) {
+		boolean found = false;
+		//checks if book exists
+		for(booknode tempb = head; tempb != null; tempb = tempb.next) {
+			if(tempb.title.equals(title)) {
+				//stores if book exists
+				found = true;
+				if(tempb.list != null) {
+					//adds customer to the end of the list if one already exists
+					customernode tempc = tempb.list;
+					
+					while(tempc.next != null) {
+						tempc = tempc.next;
+					}
+					
+					tempc.next = new customernode(name, copies, null);
+				}
+				else {
+					//adds the customer if no list exists
+					tempb.list = new customernode(name, copies, null);
+				}
+				break;
+			}
+		}
+		
+		if(!found) {
+			//informs the user if the book doesn't exists
+			System.out.println("The book could not be found.");
+		}
+	}
+	//sells books to a customer
+	public void sellbook(String title) {
+		boolean found = false;
+		//checks if book exists
+		for(booknode tempb = head; tempb != null; tempb = tempb.next) {
+			if(tempb.title.equals(title)) {
+				//stores if book exists
+				found = true;
+				if(tempb.list != null) {
+					//sells books to the first customer if there are any
+					customernode tempc = tempb.list;
+					tempb.sold += tempc.copies;
+					tempb.list = tempc.next;
+				}
+				else {
+					//informs the user if there are no customers
+					System.out.println("There are no customers for the book.");
+				}
+				break;
+			}
+		}
+		
+		if(!found) {
+			//informs the user if the book doesn't exists
+			System.out.println("The book could not be found.");
+		}
+	}
+	//cancels a book order
+	public void cancelbook(String title, String name) {
+		boolean foundb = false;
+		boolean foundc = false;
+		//checks if book exists
+		for(booknode tempb = head; tempb != null; tempb = tempb.next) {
+			if(tempb.title.equals(title)) {
+				//stores if book exists
+				foundb = true;
+				if(tempb.list != null) {
+					//checks if the book has customers
+					if(tempb.list.name.equals(name)) {
+						//checks if customer is at the top of the list and removes them if so
+						foundc = true;
+						tempb.list = tempb.list.next;
+					}
+					else {
+						//checks if customer is in the list
+						for(customernode tempc = tempb.list; tempc.next != null; tempc = tempc.next) {
+							if(tempc.next.name.equals(name)) {
+								//removes the customer if they exist
+								foundc = true;
+								tempc.next = tempc.next.next;
+								break;
+							}
+						}
+					}
+				}
+				break;
+			}
+		}
+		
+		if(!foundb) {
+			//informs the user if the book doesn't exists
+			System.out.println("The book could not be found.");
+		}
+		if(!foundc) {
+			//informs the user if the customer is not on the list
+			System.out.println("The customer could not be found.");
+		}
+	}
+	//prints the info of a book
+	public void bookinfo(String title) {
+		boolean found = false;
+		//checks if book exists
+		for(booknode tempb = head; tempb != null; tempb = tempb.next) {
+			if(tempb.title.equals(title)) {
+				//stores if book exists
+				found = true;
+				//prints out the info of the book
+				System.out.println("The title is: " + tempb.title);
+				System.out.println("The price is: " + tempb.price);
+				System.out.println("The number of copies sold is: " + tempb.sold);
+				if(tempb.list != null) {
+					System.out.println("The customers waiting are: ");
+					for(customernode tempc = tempb.list; tempc != null; tempc = tempc.next) {
+						System.out.println("    " + tempc.name + " who has ordered " + tempc.copies + " copies.");
+					}
+				}
+				break;
+			}
+		}
+		
+		if(!found) {
+			//informs the user if the book doesn't exists
+			System.out.println("The book could not be found.");
+		}
+	}
+	//prints the info of all of the books
+	public void allinfo() {
+		//prints out the info of each book
+		for(booknode tempb = head; tempb != null; tempb = tempb.next) {
+			System.out.println("The title is: " + tempb.title);
+			System.out.println("The price is: " + tempb.price);
+			System.out.println("The number of copies sold is: " + tempb.sold);
+			if(tempb.list != null) {
+				System.out.println("The customers waiting are: ");
+				for(customernode tempc = tempb.list; tempc != null; tempc = tempc.next) {
+					System.out.println("    " + tempc.name + " who has ordered " + tempc.copies + " copies.");
+				}
+			}
+			System.out.println();
+		}
+	}
+}
