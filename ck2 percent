@@ -1,0 +1,27 @@
+import java.util.*;
+import java.io.*;
+
+public class meantime {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("How many percent are there: ");
+		int num = scan.nextInt();
+		double per = 1;
+		double temp = 0;
+		
+		for(int i = 0; i < num; i++) {
+			System.out.println("What is the next percent: ");
+			temp = scan.nextDouble();
+			per = per * (temp / 100);
+		}
+		
+		double year = 1 / per;
+		
+		System.out.println("It will take an average of " + year + " years.");
+	}
+
+}
