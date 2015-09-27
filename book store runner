@@ -1,0 +1,88 @@
+import java.util.*;
+public class bookstore {
+	public static void main(String[] args) {
+		Scanner keyboard = new Scanner(System.in);
+		
+		bookscustomers bc = new bookscustomers();
+		//asks for the first task that the user wants to do
+		displaymenu();
+		int option = keyboard.nextInt();
+		keyboard.nextLine();
+		//loop for the tasks
+		while(option != 7) {
+			if(option == 1) {
+				//adds a book
+				System.out.println("Enter the title of the book: ");
+				String title = keyboard.nextLine();
+				
+				System.out.println("Enter the price of the book: ");
+				double price = keyboard.nextDouble();
+				keyboard.nextLine();
+				
+				bc.addbook(title, price);
+			}
+			else if(option == 2) {
+				//orders a book
+				System.out.println("Enter the title of the book: ");
+				String title = keyboard.nextLine();
+				
+				System.out.println("Enter your last name: ");
+				String name = keyboard.next();
+				
+				System.out.println("Enter the number of copies: ");
+				int copies = keyboard.nextInt();
+				keyboard.nextLine();
+				
+				bc.orderbook(title, name, copies);
+			}
+			else if(option == 3) {
+				//sells books to a customer
+				System.out.println("Enter the title of the book: ");
+				String title = keyboard.nextLine();
+				
+				bc.sellbook(title);
+			}
+			else if(option == 4) {
+				//cancels a book order
+				System.out.println("Enter the title of the book: ");
+				String title = keyboard.nextLine();
+				
+				System.out.println("Enter your last name: ");
+				String name = keyboard.next();
+				
+				bc.cancelbook(title, name);
+			}
+			else if(option == 5) {
+				//prints the info of a book
+				System.out.println("Enter the title of the book: ");
+				String title = keyboard.nextLine();
+				
+				bc.bookinfo(title);
+			}
+			else if(option == 6) {
+				//prints the info of all of the books
+				bc.allinfo();
+			}
+			else {
+				//informs user if input is not an option
+				System.out.println("Invalid option.");
+			}
+			//asks for the next task that the user wants to do
+			System.out.println();
+			displaymenu();
+			option = keyboard.nextInt();
+			keyboard.nextLine();
+		}
+	}
+	//displays the menu
+	private static void displaymenu() {
+		System.out.println("What do you want to do: ");
+		System.out.println("1. Add a new book.");
+		System.out.println("2. Order a book.");
+		System.out.println("3. Sell a book.");
+		System.out.println("4. Cancel an order.");
+		System.out.println("5. Display information about a book.");
+		System.out.println("6. Display information on all books.");
+		System.out.println("7. Quit.");
+	}
+}
