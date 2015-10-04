@@ -1,0 +1,103 @@
+//Takes a maze file and then prints the path from the start to the end if it exists
+import java.util.*;
+import java.io.*;
+public class mazesolve {
+	private static int[][] maze;
+	private static boolean[][] visit;
+	private static int height, width;
+	private static int startx, starty;
+	private static int endx, endy;
+	private static Scanner reader;
+	//asks for the maze file and calls the recursive methods
+	public static void main(String[] args) throws FileNotFoundException {
+		Scanner scan = new Scanner(System.in);
+        String file = "";
+        boolean solve = false;
+        
+        System.out.println("Enter the name of the maze file: ");
+        file = scan.next();
+        
+        readmaze(file);
+        
+        solve = solvemaze(startx, starty);
+        
+        if(solve) {
+        	printpath(startx, starty);
+        }
+        else {
+        	System.out.println("The maze can't be solved.");
+        }
+	}
+	//reads the maze file
+	public static void readmaze(String file) throws FileNotFoundException {
+		reader = new Scanner(new File(file));
+		
+		height = reader.nextInt();
+		width = reader.nextInt();
+		
+		maze = new int[height][width];
+		visit = new boolean[height][width];
+		
+		makelong(0);
+		
+		startx = reader.nextInt();
+		starty = reader.nextInt();
+		
+		endx = reader.nextInt();
+		endy = reader.nextInt();
+	}
+	//fills the arrays
+	public static void makelong(int n) {
+		if(n < height) {
+			maketall(n, 0);
+			makelong(n + 1);
+		}
+	}
+	public static void maketall(int n, int m) {
+		if(m < width) {
+			maze[n][m] = reader.nextInt();
+			visit[n][m] = false;
+			maketall(n, m + 1);
+		}
+	}
+	//goes through the maze
+	public static boolean solvemaze(int x, int y) {
+		if((x < 0)||(x >= height)||(y < 0)||(y >= width)) {
+			return false;
+		}
+		else if(maze[x][y] == 1) {
+			return false;
+		}
+		else if(visit[x][y]) {
+			return false;
+		}
+		else if((x == endx)&&(y == endy)) {
+			visit[x][y] = true;
+			return true;
+		}
+		else {
+			visit[x][y] = true;
+			
+			if(solvemaze(x - 1, y)||solvemaze(x + 1, y)||solvemaze(x, y - 1)||solvemaze(x, y + 1)) {
+				return true;
+			}
+			else {
+				visit[x][y] = false;
+				return false;
+			}
+		}
+	}
+	//prints the path
+	public static void printpath(int x, int y) {
+		if((x >= 0)&&(x < height)&&(y >= 0)&&(y < width)) {
+			if(visit[x][y]) {
+				System.out.print("( " + x + ", " + y + ") ");
+				visit[x][y] = false;
+				printpath(x + 1, y);
+				printpath(x - 1, y);
+				printpath(x, y + 1);
+				printpath(x, y - 1);
+			}
+		}
+	}
+}
