@@ -1,0 +1,44 @@
+import java.util.*;
+import java.io.*;
+public class mazemake {
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner scan = new Scanner(System.in);
+        PrintWriter write;
+        String file = "";
+        boolean con = true;
+        int row = 0;
+        int col = 0;
+        String lin = "";
+        
+        System.out.println("Enter the file name: ");
+        file = scan.next();
+        
+        write = new PrintWriter(new File(file));
+        
+        System.out.println("Enter the number of rows");
+        row = scan.nextInt();
+        scan.nextLine();
+        
+        System.out.println("Enter the number of columns");
+        col = scan.nextInt();
+        scan.nextLine();
+        
+        write.println(row + " " + col);
+        
+        for(int i = 0; i < row; i++) {
+            System.out.println("Enter a row of the maze: ");
+            lin = scan.nextLine();
+            write.println(lin);
+        }
+        System.out.println("Enter the start location: ");
+        lin = scan.nextLine();
+        write.println(lin);
+        
+        System.out.println("Enter the end location: ");
+        lin = scan.nextLine();
+        write.println(lin);
+        
+        write.close();
+    }
+
+}
