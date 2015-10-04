@@ -1,0 +1,88 @@
+public class pizzaorder {
+	private int numpizzas;
+	private String size;
+	private int cheese;
+	private int pepperoni;
+	private int beef;
+	private double cost;
+	private String size1;
+	private int cheese1;
+	private int pepperoni1;
+	private int beef1;
+	private double cost1;
+	private String size2;
+	private int cheese2;
+	private int pepperoni2;
+	private int beef2;
+	private double cost2;
+	private String size3;
+	private int cheese3;
+	private int pepperoni3;
+	private int beef3;
+	private double cost3;
+	private double totalcost;
+	public pizzaorder() {
+		super();
+	}
+	public int getNumpizzas() {
+		return numpizzas;
+	}
+	public void setNumpizzas(int numpizzas) {
+		this.numpizzas = numpizzas;
+		if((this.numpizzas < 2)||(this.numpizzas > 3)) {
+			System.out.println("incorrect number of pizzas");
+		}
+	}
+	public void setpizza1(pizza p1) {
+		cost1 = p1.calccost();
+		System.out.print("Your first pizza is a: ");
+		p1.getdescription();
+	}
+	public void setpizza2(pizza p2) {
+		cost2 = p2.calccost();
+		System.out.print("Your second pizza is a: ");
+		p2.getdescription();
+	}
+	public void setpizza3(pizza p3) {
+		cost3 = p3.calccost();
+		System.out.print("Your third pizza is a: ");
+		p3.getdescription();
+	}
+	public double calctotal(){
+		totalcost = cost1 + cost2 + cost3;
+		return(totalcost);
+	}
+	public void getdescription() {
+		if(numpizzas == 2) {
+			System.out.println("Your first pizza is a: " + size1);
+			System.out.println("with:");
+			System.out.println(cheese1 + " cheese");
+			System.out.println(pepperoni1 + " pepperoni");
+			System.out.println(beef1 + " beef");
+			System.out.println("Your second pizza is a: " + size2);
+			System.out.println("with:");
+			System.out.println(cheese2 + " cheese");
+			System.out.println(pepperoni2 + " pepperoni");
+			System.out.println(beef2 + " beef");
+			System.out.println("and the total cost is: $" + totalcost);
+		}
+		else if(numpizzas == 3) {
+			System.out.println("Your first pizza is a: " + size1);
+			System.out.println("with:");
+			System.out.println(cheese1 + " cheese");
+			System.out.println(pepperoni1 + " pepperoni");
+			System.out.println(beef1 + " beef");
+			System.out.println("Your second pizza is a: " + size2);
+			System.out.println("with:");
+			System.out.println(cheese2 + " cheese");
+			System.out.println(pepperoni2 + " pepperoni");
+			System.out.println(beef2 + " beef");
+			System.out.println("Your third pizza is a: " + size3);
+			System.out.println("with:");
+			System.out.println(cheese3 + " cheese");
+			System.out.println(pepperoni3 + " pepperoni");
+			System.out.println(beef3 + " beef");
+			System.out.println("and the total cost is: $" + totalcost);
+		}
+	}
+}
