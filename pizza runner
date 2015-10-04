@@ -1,0 +1,19 @@
+public class pizzaplace {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		pizza pz1 = new pizza("large", 1, 0, 1);
+		pizza pz2 = new pizza("medium", 2, 2, 0);
+		pizzaorder party = new pizzaorder();
+		party.setNumpizzas(2);
+		party.setpizza1(pz1);
+		party.setpizza2(pz2);
+		double total = party.calctotal();
+		System.out.println("Your total cost is: $" + total);
+		
+
+	}
+
+}
