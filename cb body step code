@@ -1,0 +1,456 @@
+//sets depth for isometric view
+depth = x - y;
+
+global.fix_gun = false;
+
+//ini_open("Saves.ini");
+//global.died = ini_read_real("Save", "die", 0);
+//ini_close();
+
+//if global.died = true {
+//    lives -= 1;
+//    score -= 50;
+//    global.died = false;
+//    ini_open("Saves.ini");
+//    ini_write_real("Save", "die", false);
+//    ini_close();
+//}
+
+//toggles crouch
+if keyboard_check_pressed(ord('C')) = true {
+    if global.p_crouch_down = true {
+        global.p_crouch_down = false;
+        sprite_index = spr_guy_tall;
+    }
+    else {
+        global.p_crouch_down = true;
+        sprite_index = spr_guy_crouch_tall;
+    }
+}
+
+//
+if place_meeting(x, y + 4, obj_cover) {
+    global.crouch = true;
+    global.fix_gun = true;
+    if mouse_check_button(mb_left) {
+        if global.ammo > 0 {
+            global.crouch = false;
+            global.elevate = true;
+        }
+        else {
+            global.crouch = true;
+            global.elevate = true;
+        }
+    }
+}
+else if place_meeting(x, y - 4, obj_cover) {
+    global.crouch = true;
+    if mouse_check_button(mb_left) {
+        if global.ammo > 0 {
+            global.crouch = false;
+            global.elevate = true;
+        }
+        else {
+            global.crouch = true;
+            global.elevate = true;
+        }
+    }
+}
+else if place_meeting(x + 4, y, obj_cover) {
+    global.crouch = true;
+    if mouse_check_button(mb_left) {
+        if global.ammo > 0 {
+            global.crouch = false;
+            global.elevate = true;
+        }
+        else {
+            global.crouch = true;
+            global.elevate = true;
+        }
+    }
+}
+else if place_meeting(x - 4, y, obj_cover) {
+    global.crouch = true;
+    global.fix_gun = true;
+    if mouse_check_button(mb_left) {
+        if global.ammo > 0 {
+            global.crouch = false;
+            global.elevate = true;
+        }
+        else {
+            global.crouch = true;
+            global.elevate = true;
+        }
+    }
+}
+else if mouse_check_button(mb_left) {
+    if global.ammo > 0 {
+        global.crouch = false;
+        global.elevate = true;
+    }
+    else if global.p_crouch_down = true {
+        global.crouch = true;
+        global.elevate = true;
+    }
+}
+else if global.p_crouch_down = true {
+    global.crouch = true;
+}
+else {
+    global.crouch = false;
+}
+
+if global.crouch = true {
+    sprite_index = spr_guy_body_part_crouch;
+}
+else {
+    sprite_index = spr_guy_body_part;
+}
+
+if keyboard_check_pressed(ord('W')) = true {
+    global.move_up = true;
+    global.move_down = false;
+}
+if keyboard_check_pressed(ord('S')) = true {
+    global.move_down = true;
+    global.move_up = false;
+}
+if keyboard_check_pressed(ord('A')) = true {
+    global.move_left = true;
+    global.move_right = false;
+}
+if keyboard_check_pressed(ord('D')) = true {
+    global.move_right = true;
+    global.move_left = false;
+}
+
+if keyboard_check_released(ord('W')) = true {
+    global.move_up = false;
+    if keyboard_check(ord('S')) = true {
+        global.move_down = true;
+    }
+}
+if keyboard_check_released(ord('S')) = true {
+    global.move_down = false;
+    if keyboard_check(ord('W')) = true {
+        global.move_up = true;
+    }
+}
+if keyboard_check_released(ord('A')) = true {
+    global.move_left = false;
+    if keyboard_check(ord('D')) = true {
+        global.move_right = true;
+    }
+}
+if keyboard_check_released(ord('D')) = true {
+    global.move_right = false;
+    if keyboard_check(ord('A')) = true {
+        global.move_left = true;
+    }
+}
+
+if keyboard_check(ord('W')) = false {
+    global.move_up = false;
+}
+if keyboard_check(ord('S')) = false {
+    global.move_down = false;
+}
+if keyboard_check(ord('A')) = false {
+    global.move_left = false;
+}
+if keyboard_check(ord('D')) = false {
+    global.move_right = false;
+}
+
+if global.move_up = true {
+    if keyboard_check(vk_shift) = true {
+        if global.crouch = true {
+            if global.p_v_spd > (global.p_crouch_run_spd * -1) {
+               global.p_v_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = (global.p_crouch_run_spd * -1);
+            }
+        }
+        else {
+            if global.p_v_spd > (global.p_run_spd * -1) {
+               global.p_v_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = (global.p_run_spd * -1);
+            }
+        }
+    }
+    else {
+        if global.crouch = true {
+            if global.p_v_spd > (global.p_crouch_spd * -1) {
+           global.p_v_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = (global.p_crouch_spd * -1);
+            }
+        }
+        else {
+            if global.p_v_spd > (global.p_walk_spd * -1) {
+                global.p_v_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = (global.p_walk_spd * -1);
+            }
+        }
+    }
+}
+else if global.move_down = true {
+    if keyboard_check(vk_shift) = true {
+        if global.crouch = true {
+            if global.p_v_spd < global.p_crouch_run_spd {
+               global.p_v_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = global.p_crouch_run_spd;
+            }
+        }
+        else {
+            if global.p_v_spd < global.p_run_spd {
+               global.p_v_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = global.p_run_spd;
+            }
+        }
+    }
+    else {
+        if global.crouch = true {
+            if global.p_v_spd < global.p_crouch_spd {
+               global.p_v_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = global.p_crouch_spd;
+            }
+        }
+        else {
+            if global.p_v_spd < global.p_walk_spd {
+               global.p_v_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_v_spd = global.p_walk_spd;
+            }
+        }
+    }
+}
+else {
+    if global.p_v_spd > (global.p_acc_spd - 1) {
+        global.p_v_spd -= global.p_acc_spd;
+    }
+    else if global.p_v_spd < (1 - global.p_acc_spd) {
+        global.p_v_spd += global.p_acc_spd;
+    }
+    else {
+        global.p_v_spd = 0;
+    }
+}
+
+if global.move_left = true {
+    if keyboard_check(vk_shift) = true {
+        if global.crouch = true {
+            if global.p_h_spd > (global.p_crouch_run_spd * -1) {
+               global.p_h_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = (global.p_crouch_run_spd * -1);
+            }
+        }
+        else {
+            if global.p_h_spd > (global.p_run_spd * -1) {
+               global.p_h_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = (global.p_run_spd * -1);
+            }
+        }
+    }
+    else {
+        if global.crouch = true {
+            if global.p_h_spd > (global.p_crouch_spd * -1) {
+                global.p_h_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = (global.p_crouch_spd * -1);
+            }
+        }
+        else {
+            if global.p_h_spd > (global.p_walk_spd * -1) {
+                global.p_h_spd -= global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = (global.p_walk_spd * -1);
+            }
+        }
+    }
+}
+else if global.move_right = true {
+    if keyboard_check(vk_shift) = true {
+        if global.crouch = true {
+            if global.p_h_spd < global.p_crouch_run_spd {
+               global.p_h_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = global.p_crouch_run_spd;
+            }
+        }
+        else {
+            if global.p_h_spd < global.p_run_spd {
+               global.p_h_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = global.p_run_spd;
+            }
+        }
+    }
+    else {
+        if global.crouch = true {
+            if global.p_h_spd < global.p_crouch_spd {
+               global.p_h_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = global.p_crouch_spd;
+            }
+        }
+        else {
+            if global.p_h_spd < global.p_walk_spd {
+               global.p_h_spd += global.p_acc_spd; 
+            }
+            else {
+                global.p_h_spd = global.p_walk_spd;
+            }
+        }
+    }
+}
+else {
+    if global.p_h_spd > (global.p_acc_spd - 1) {
+        global.p_h_spd -= global.p_acc_spd;
+    }
+    else if global.p_h_spd < (1 - global.p_acc_spd) {
+        global.p_h_spd += global.p_acc_spd;
+    }
+    else {
+        global.p_h_spd = 0;
+    }
+}
+
+if global.p_v_spd > 0 {
+    for (i = global.p_v_spd; i > 0; i -= 1;) {
+        if !place_meeting(x - 4, y + i, obj_wall) {
+            if !place_meeting(x - 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+            else if !place_meeting(x + 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+        }
+        else if !place_meeting(x + 4, y + i, obj_wall) {
+            if !place_meeting(x + 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+            else if !place_meeting(x - 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+        }
+    }
+}
+else if global.p_v_spd < 0 {
+    for (i = global.p_v_spd; i < 0; i += 1;) {
+        if !place_meeting(x - 4, y + i, obj_wall) {
+            if !place_meeting(x - 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+            else if !place_meeting(x + 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+        }
+        else if !place_meeting(x + 4, y + i, obj_wall) {
+            if !place_meeting(x + 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+            else if !place_meeting(x - 4, y + i, obj_cover) {
+                y += i;
+                global.v_move += i;
+            }
+        }
+    }
+}
+
+if global.p_h_spd > 0 {
+    for (i = global.p_h_spd; i > 0; i -= 1;) {
+        if !place_meeting(x + i, y - 4, obj_wall) {
+            if !place_meeting(x + i, y - 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+            else if !place_meeting(x + i, y + 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+        }
+        else if !place_meeting(x + i, y + 4, obj_wall) {
+            if !place_meeting(x + i, y + 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+            else if !place_meeting(x + i, y - 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+        }
+    }
+}
+else if global.p_h_spd < 0 {
+    for (i = global.p_h_spd; i < 0; i += 1;) {
+        if !place_meeting(x + i, y - 4, obj_wall) {
+            if !place_meeting(x + i, y - 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+            else if !place_meeting(x + i, y + 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+        }
+        else if !place_meeting(x + i, y + 4, obj_wall) {
+            if !place_meeting(x + i, y + 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+            else if !place_meeting(x + i, y - 4, obj_cover) {
+                x += i;
+                global.h_move += i;
+            }
+        }
+    }
+}
+
+if global.health_reg >= 120 {
+    if health < global.max_health {
+        health += global.health_speed;
+    }
+}
+else {
+    global.health_reg += global.health_speed;
+}
+if global.health_boost = 0 {
+    global.max_health = 100;
+    global.health_speed = 1;
+}
+else {
+    global.health_boost -= 1;
+}
+
+global.player_x = x;
+global.player_y = y;
