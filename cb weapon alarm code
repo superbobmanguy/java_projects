@@ -1,0 +1,37 @@
+if global.p_empty = true {
+    if global.powerup = 2 {
+        if global.bullets > 0 {
+            global.ammo += 1;
+            global.bullets -= 1;
+            if global.ammo < global.p_clip {
+                alarm[9] = global.p_reload;
+            }
+            else {
+                global.p_empty = false;
+            }
+        }
+        else {
+            global.p_empty = false;
+        }
+    }
+    else {
+        if global.bullets > 0 {
+            if global.bullets >= global.p_clip {
+                if global.p_clip > global.bullets {
+                    global.ammo = global.bullets;
+                    global.bullets = 0;
+                }
+                else {
+                    diff = global.p_clip - global.ammo
+                    global.ammo = global.p_clip;
+                    global.bullets -= diff;
+                }
+            }
+            else {
+                global.ammo = global.bullets;
+                global.bullets = 0;
+            }
+        }
+        global.p_empty = false;
+    }
+}
