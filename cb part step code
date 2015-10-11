@@ -1,0 +1,30 @@
+depth = x - y - 13;
+
+if global.crouch = true {
+    if global.armor > 0 {
+        sprite_index = spr_guy_body_armor_crouch;
+    }
+    else {
+        sprite_index = spr_guy_body_top_crouch;
+    }
+    x = global.player_x + 2;
+    y = global.player_y - 2;
+}
+else {
+    if global.armor > 0 {
+        sprite_index = spr_guy_body_armor;
+    }
+    else {
+        sprite_index = spr_guy_body_top;
+    }
+    if global.fix_gun = true {
+        depth -= 64;
+    }
+    x = global.player_x + 4;
+    y = global.player_y - 4;
+}
+
+//depth = x - y - 13;
+//if global.fix_gun = true {
+//    depth -= 32;
+//}
