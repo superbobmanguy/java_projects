@@ -1,0 +1,164 @@
+depth = x - y - 9;
+
+if global.powerup = 0 {
+    global.p_rof = 10;
+    global.p_sway = 3;
+    global.p_clip = 10;
+    global.p_reload = 60;
+    global.max_ammo = 50;
+}
+else if global.powerup = 1 {
+    global.p_rof = 2;
+    global.p_sway = 6;
+    global.p_clip = 50;
+    global.p_reload = 90;
+    global.max_ammo = 250;
+}
+else if global.powerup = 2 {
+    global.p_rof = 20;
+    global.p_sway = 30;
+    global.p_clip = 5;
+    global.p_reload = 30;
+    global.max_ammo = 25;
+}
+
+if global.crouch = true {
+    sprite_index = spr_guy_pistol_crouch;
+    x = global.player_x + 2;
+    y = global.player_y - 2;
+}
+else {
+    if global.powerup = 0 {
+        sprite_index = spr_guy_pistol;
+        if global.fix_gun = true {
+            depth -= 64;
+        }
+        
+    }
+    else if global.powerup = 1 {
+        sprite_index = spr_guy_rifle_short;
+        if global.fix_gun = true {
+            depth -= 64;
+        }
+    }
+    else if global.powerup = 2 {
+        sprite_index = spr_guy_shotgun_short;
+        if global.fix_gun = true {
+            depth -= 64;
+        }
+    }
+    x = global.player_x + 4;
+    y = global.player_y - 4;
+}
+
+//depth = x - y - 9;
+//if global.fix_gun = true {
+//    depth -= 32;
+//}
+
+//y += global.v_move;
+//x += global.h_move;
+
+global.p_guy_angle = point_direction(x, y, mouse_x, mouse_y);
+image_angle = global.p_guy_angle;
+
+
+if mouse_check_button(mb_left) {
+    if global.ammo > 0 {
+        if global.p_shoot >= global.p_rof {
+            global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+            if global.powerup = 2 {
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+                global.bullet_angle = global.p_guy_angle + (global.p_sway - random(global.p_sway * 2));
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+            }
+            else if global.powerup = 1 {
+                global.p_bullet_x = x + lengthdir_x(44, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(44, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+            }
+            else {
+                global.p_bullet_x = x + lengthdir_x(38, global.p_guy_angle);
+                global.p_bullet_y = y + lengthdir_y(38, global.p_guy_angle);
+                instance_create(global.p_bullet_x, global.p_bullet_y, obj_player_shot_better);
+                //instance_create(global.p_bullet_x, global.p_bullet_y, obj_over_cover);
+            }
+            instance_create(global.p_bullet_x, global.p_bullet_y, obj_spark);
+            global.ammo -= 1;
+            global.p_shoot = 0;
+            alarm[9] = 0;
+            global.show_reload = 0;
+            global.p_empty = false;
+            audio_play_sound(snd_shot, 10, false);
+        }
+    }
+    else {
+        if global.p_empty = false {
+            alarm[9] = global.p_reload;
+            global.p_empty = true;
+            global.show_reload = global.p_reload;
+        }
+    }
+}
+
+if keyboard_check_pressed(ord('R')) = true {
+    if global.ammo < global.p_clip {
+        alarm[9] = global.p_reload;
+        global.p_empty = true;
+        global.show_reload = global.p_reload;
+    }
+}
+
+if global.show_reload > 0 {
+    global.show_reload -= 1;
+}
+
+global.p_shoot += 1;
