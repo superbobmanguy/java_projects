@@ -1,0 +1,23 @@
+depth = x - y - 21;
+
+if global.crouch = true {
+    sprite_index = spr_guy_crouch_new;
+    x = global.player_x + 4;
+    y = global.player_y - 4;
+}
+else {
+    sprite_index = spr_guy_new;
+    if global.fix_gun = true {
+        depth -= 64;
+    }
+    x = global.player_x + 8;
+    y = global.player_y - 8;
+}
+
+//depth = x - y - 21;
+//if global.fix_gun = true {
+//    depth -= 32;
+//}
+
+global.p_guy_angle = point_direction(x, y, mouse_x, mouse_y);
+image_angle = global.p_guy_angle;
