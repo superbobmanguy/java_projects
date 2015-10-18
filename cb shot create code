@@ -1,0 +1,23 @@
+image_angle = global.bullet_angle;
+far_x = lengthdir_x(640, global.bullet_angle);
+far_y = lengthdir_y(640, global.bullet_angle);
+near_x = x;
+near_y = y;
+alpha = 0.5;
+over_cover = false;
+alarm[0] = 1;
+alarm[1] = 2;
+closer = false;
+far_object = noone;
+near_object = noone;
+cover_object = noone;
+cover_object_other = noone;
+cover_object_a = noone;
+cover_object_b = noone;
+ang = global.bullet_angle;
+image_xscale = .01;
+
+st_x = 0;
+st_y = 0;
+i_x = 0;
+i_y = 0;
