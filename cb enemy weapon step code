@@ -1,0 +1,194 @@
+if turtle = 1 {
+    rof = 20;
+    sway = 3;
+    clip = 10;
+    reload = 60;
+}
+else if turtle = 2 {
+    rof = 5;
+    sway = 6;
+    clip = 50;
+    reload = 120;
+}
+else if turtle = 3 {
+    rof = 60;
+    sway = 30;
+    clip = 5;
+    reload = 90;
+}
+else {
+    rof = 5;
+    sway = 12;
+    clip = 100;
+    reload = 240;
+}
+
+depth = x - y - 16;
+
+enemy_angle = point_direction(x, y, global.player_x, global.player_y);
+image_angle = enemy_angle;
+
+if turtle = 3 {
+    cool = false;
+    i = 1;
+    bacon = 0;
+    give_bacon = false;
+    while i < 640 {
+         near_object = collision_line(x, y, lengthdir_x(i,enemy_angle) + x, lengthdir_y(i, enemy_angle) + y, obj_guy_gun, true, true);
+         
+        if near_object != noone {
+            if give_bacon = false {
+                bacon = i;
+                give_bacon = true;
+            }
+            if bacon - 64 > 0 {
+                cover_object = collision_line(lengthdir_x(bacon -64, enemy_angle) + x, lengthdir_y(bacon -64, enemy_angle) + y, lengthdir_x(bacon + 16,enemy_angle) + x, lengthdir_y(bacon + 16, enemy_angle) + y, obj_fn_cover, true, true);
+            }
+            else {
+                cover_object = collision_line(x, y, lengthdir_x(bacon + 16, enemy_angle) + x, lengthdir_y(bacon + 16, enemy_angle) + y, obj_fn_cover, true, true);
+            }
+            
+            if global.crouch = false {
+                cool = true;
+                break;
+            }
+            else if cover_object = noone {
+                cool = true;
+                break;
+            }
+            else {
+                f_it += 1;
+                break;
+            }
+        }
+        i += 1;
+    }
+    
+    if f_it >= 120 {
+        cool = true;
+        f_it = 0;
+    }
+    
+    //cool = false;
+    //bacon = point_direction(x, y, global.player_x, global.player_y);
+    //cover_object = collision_line(lengthdir_x(bacon - 64,enemy_angle) + x, lengthdir_y(bacon - 64,enemy_angle) + y, lengthdir_x(bacon + 16,enemy_angle) + x, lengthdir_y(bacon + 16, enemy_angle) + y, obj_fn_cover, true, true);
+    //if global.crouch = false {
+    //    cool = true;
+    //}
+    //else if cover_object = noone {
+    //    cool = true;
+    //}
+}
+
+if cool = true {
+    if shoot >= rof {
+        if ammo > 0 {
+            if turtle = 1 {
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(38, enemy_angle);
+                bullet_y = y + lengthdir_y(38, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+            }
+            else if turtle = 2 {
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+            }
+            else if turtle = 3 {
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+            }
+            else {
+                global.bullet_enemy_angle = enemy_angle + (sway - random(sway * 2));
+                bullet_x = x + lengthdir_x(44, enemy_angle);
+                bullet_y = y + lengthdir_y(44, enemy_angle);
+                instance_create(bullet_x, bullet_y, obj_enemy_shot_better);
+            }
+            
+            //instance_create(bullet_x, bullet_y, obj_over_cover_enemy);
+            instance_create(bullet_x, bullet_y, obj_spark);
+            ammo -= 1;
+            shoot = 0;
+            audio_play_sound(snd_shot, 10, false);
+            if empty = true {
+                alarm[10] = reload;
+            }
+        }
+        else {
+            if empty = false {
+                alarm[10] = reload;
+                empty = true;
+            }
+        }
+    }
+}
+
+if ammo > clip {
+    ammo = clip;
+}
+
+//if !place_meeting(x, y, obj_enemy_body) {
+//    instance_destroy();
+//}
+
+if enemy_crouch = true {
+    sprite_index = spr_enemy_pistol_crouch;
+}
+else {
+    if turtle = 1 {
+        sprite_index = spr_enemy_pistol;
+    }
+    else if turtle = 2 {
+        sprite_index = spr_enemy_rifle;
+    }
+    else if turtle = 3 {
+        sprite_index = spr_enemy_shotgun;
+    }
+    else {
+        sprite_index = spr_enemy_gattling;
+    }
+    if enemy_fix_gun = true {
+        depth -= 64;
+    }
+}
+
+shoot += 1;
