@@ -1,0 +1,70 @@
+dist_x = far_x + near_x;
+dist_y = far_y + near_y;
+
+i_x = x;
+i_y = y;
+
+st_x = 0;
+st_y = 0;
+
+give_bacon = false;
+bacon = 0;
+
+i = 1;
+end_s = false;
+pie = 0;
+
+while i < 640 {
+    near_object = collision_line(x, y, lengthdir_x(i,ang) + x, lengthdir_y(i, ang) + y, obj_enemy_pistol, true, true);
+    far_object = collision_line(x, y, lengthdir_x(i,ang) + x, lengthdir_y(i, ang) + y, obj_wall, true, true);
+    //cover_object = collision_line(x, y, lengthdir_x(i,ang) + x, lengthdir_y(i, ang) + y, obj_fn_cover, true, true);
+    //if cover_object != noone {
+        //cover_object_other = cover_object;
+    //    pie = 128;
+    //}
+    
+    
+    if near_object != noone {
+        if give_bacon = false {
+            bacon = i;
+            give_bacon = true;
+        }
+        if bacon - 64 > 0 {
+            cover_object = collision_line(lengthdir_x(bacon -64,ang) + x, lengthdir_y(bacon -64, ang) + y, lengthdir_x(bacon + 16,ang) + x, lengthdir_y(bacon + 16, ang) + y, obj_fn_cover, true, true);
+        }
+        else {
+            cover_object = collision_line(x, y, lengthdir_x(bacon + 16,ang) + x, lengthdir_y(bacon + 16, ang) + y, obj_fn_cover, true, true);
+        }
+        
+        if near_object.enemy_crouch = false {
+            st_x = lengthdir_x(i,ang) + x;
+            st_y = lengthdir_y(i,ang) + y;
+            end_s = true;
+            near_object.enemy_health -= 20;
+            break;
+        }
+        else if cover_object = noone {
+            st_x = lengthdir_x(i,ang) + x;
+            st_y = lengthdir_y(i,ang) + y;
+            end_s = true;
+            near_object.enemy_health -= 20;
+            break;
+        }
+    }
+    if far_object != noone {
+        st_x = lengthdir_x(i,ang) + x;
+        st_y = lengthdir_y(i,ang) + y;
+        end_s = true;
+        break;
+    }
+    i += 1;
+    pie -= 1;
+    if end_s = true {
+        i = 641;
+    }
+}
+if end_s = false {
+    st_x = lengthdir_y(640, ang);
+    st_y = lengthdir_y(640, ang);
+}
+image_xscale = point_distance(x, y, st_x, st_y) / 128;
