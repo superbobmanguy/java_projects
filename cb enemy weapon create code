@@ -1,0 +1,21 @@
+enemy_health = 100;
+global.bullet_enemy_angle = 0;
+bullet_x = 0;
+bullet_y = 0;
+shoot = 0 - random(60);
+rof = 20;
+sway = 3;
+clip = 10;
+empty = false;
+ammo = 200;
+my_x = 0;
+my_y = 0;
+turtle = 1;
+reload = 60;
+cool = true;
+cover_object = noone;
+f_it = 0;
+
+enemy_crouch = false;
+enemy_fix_gun = false;
+enemy_elevate = false;
