@@ -1,0 +1,356 @@
+///temp move code
+
+//depth = x - y;
+
+mov_h = 0;
+move_v = 0;
+
+player_x = x;
+player_y = y;
+
+guy_angle = point_direction(x, y, mouse_x, mouse_y);
+image_angle = guy_angle;
+
+
+
+pers = 1;
+pers_x = pers + dist_rt - dist_lt;
+pers_y = pers + dist_dn - dist_up;
+
+if keyboard_check_pressed(ord('C')) = true {
+    if crouch_down = true {
+        crouch_down = false;
+        //sprite_index = spr_guy_new;
+    }
+    else {
+        crouch_down = true;
+        //sprite_index = spr_guy_crouch_new;
+    }
+}
+
+if crouch_down = true {
+    crouch = true;
+}
+else {
+    crouch = false;
+}
+
+if crouch = true {
+    //sprite_index = spr_guy_crouch_new;
+}
+else {
+    //sprite_index = spr_guy_new;
+}
+
+if keyboard_check_pressed(ord('W')) = true {
+    plr_up = true;
+    plr_dn = false;
+}
+
+if keyboard_check_pressed(ord('S')) = true {
+    plr_up = false;
+    plr_dn = true;
+}
+
+if keyboard_check_pressed(ord('A')) = true {
+    plr_lt = true;
+    plr_rt = false;
+}
+
+if keyboard_check_pressed(ord('D')) = true {
+    plr_lt = false;
+    plr_rt = true;
+}
+
+if keyboard_check_released(ord('W')) = true {
+    plr_up = false;
+    if keyboard_check(ord('S')) = true {
+        plr_dn = true;
+    }
+}
+
+if keyboard_check_released(ord('S')) = true {
+    plr_dn = false;
+    if keyboard_check(ord('W')) = true {
+        plr_up = true;
+    }
+}
+
+if keyboard_check_released(ord('A')) = true {
+    plr_lt = false;
+    if keyboard_check(ord('D')) = true {
+        plr_rt = true;
+    }
+}
+
+if keyboard_check_released(ord('D')) = true {
+    plr_rt = false;
+    if keyboard_check(ord('A')) = true {
+        plr_lt = true;
+    }
+}
+
+if plr_up = true {
+        if keyboard_check(vk_shift) = true {
+            if (crouch = true)||(plr_lt = true)||(plr_rt = true)  {
+                if v_spd > (crouch_run_spd * -1) {
+                   v_spd -= acc_spd; 
+                }
+                else {
+                    v_spd = (crouch_run_spd * -1);
+                }
+            }
+            else {
+                if v_spd > (run_spd * -1) {
+                   v_spd -= acc_spd; 
+                }
+                else {
+                    v_spd = (run_spd * -1);
+                }
+            }
+        }
+        else {
+            if (crouch = true)||(plr_lt = true)||(plr_rt = true) {
+                if v_spd > (crouch_spd * -1) {
+                    v_spd -= acc_spd; 
+                }
+                else {
+                    v_spd = (crouch_spd * -1);
+                }
+            }
+            else {
+                if v_spd > (walk_spd * -1) {
+                    v_spd -= acc_spd; 
+                }
+                else {
+                    v_spd = (walk_spd * -1);
+                }
+            }
+        }
+}
+else if plr_dn = true {
+        if keyboard_check(vk_shift) = true {
+            if (crouch = true)||(plr_lt = true)||(plr_rt = true) {
+                if v_spd < crouch_run_spd {
+                   v_spd += acc_spd; 
+                }
+                else {
+                    v_spd = crouch_run_spd;
+                }
+            }
+            else {
+                if v_spd < run_spd {
+                   v_spd += acc_spd; 
+                }
+                else {
+                    v_spd = run_spd;
+                }
+            }
+        }
+        else {
+            if (crouch = true)||(plr_lt = true)||(plr_rt = true) {
+                if v_spd < crouch_spd {
+                   v_spd += acc_spd; 
+                }
+                else {
+                    v_spd = crouch_spd;
+                }
+            }
+            else {
+                if v_spd < walk_spd {
+                   v_spd += acc_spd; 
+                }
+                else {
+                    v_spd = walk_spd;
+                }
+            }
+        }
+}
+else {
+    if v_spd > (acc_spd - 1) {
+        v_spd -= acc_spd;
+    }
+    else if v_spd < (1 - acc_spd) {
+        v_spd += acc_spd;
+    }
+    else {
+        v_spd = 0;
+    }
+}
+
+if plr_lt = true {
+        if keyboard_check(vk_shift) = true {
+            if (crouch = true)||(plr_up = true)||(plr_dn = true) {
+                if h_spd > (crouch_run_spd * -1) {
+                   h_spd -= acc_spd; 
+                }
+                else {
+                    h_spd = (crouch_run_spd * -1);
+                }
+            }
+            else {
+                if h_spd > (run_spd * -1) {
+                   h_spd -= acc_spd; 
+                }
+                else {
+                    h_spd = (run_spd * -1);
+                }
+            }
+        }
+        else {
+            if (crouch = true)||(plr_up = true)||(plr_dn = true) {
+                if h_spd > (crouch_spd * -1) {
+                    h_spd -= acc_spd; 
+                }
+                else {
+                    h_spd = (crouch_spd * -1);
+                }
+            }
+            else {
+                if h_spd > (walk_spd * -1) {
+                    h_spd -= acc_spd; 
+                }
+                else {
+                    h_spd = (walk_spd * -1);
+                }
+            }
+        }
+}
+else if plr_rt = true {
+        if keyboard_check(vk_shift) = true {
+            if (crouch = true)||(plr_up = true)||(plr_dn = true) {
+                if h_spd < crouch_run_spd {
+                   h_spd += acc_spd; 
+                }
+                else {
+                    h_spd = crouch_run_spd;
+                }
+            }
+            else {
+                if h_spd < run_spd {
+                   h_spd += acc_spd; 
+                }
+                else {
+                    h_spd = run_spd;
+                }
+            }
+        }
+        else {
+            if (crouch = true)||(plr_up = true)||(plr_dn = true) {
+                if h_spd < crouch_spd {
+                   h_spd += acc_spd; 
+                }
+                else {
+                    h_spd = crouch_spd;
+                }
+            }
+            else {
+                if h_spd < walk_spd {
+                   h_spd += acc_spd; 
+                }
+                else {
+                    h_spd = walk_spd;
+                }
+            }
+        }
+}
+else {
+    if h_spd > (acc_spd - 1) {
+        h_spd -= acc_spd;
+    }
+    else if h_spd < (1 - acc_spd) {
+        h_spd += acc_spd;
+    }
+    else {
+        h_spd = 0;
+    }
+}
+
+if v_spd > 0 {
+    for (i = v_spd; i > 0; i -= 1;) {
+        movep = y + i;
+        if !place_meeting(x - pers, movep, obj_wall) {
+            if !place_meeting(x + pers, movep, obj_cover) {
+                y += i;
+            }
+            else if !place_meeting(x - pers, movep, obj_cover) {
+                y += i;
+            }
+        }
+        else if !place_meeting(x + pers, movep, obj_wall) {
+            if !place_meeting(x + pers, movep, obj_cover) {
+                y += i;
+            }
+            else if !place_meeting(x - pers, movep, obj_cover) {
+                y += i;
+            }
+        }
+    }
+}
+else if v_spd < 0 {
+    for (i = v_spd; i < 0; i += 1;) {
+        movep = y + i;
+        if !place_meeting(x - pers, movep, obj_wall) {
+            if !place_meeting(x + pers, movep, obj_cover) {
+                y += i;
+            }
+            else if !place_meeting(x - pers, movep, obj_cover) {
+                y += i;
+            }
+        }
+        else if !place_meeting(x + pers, movep, obj_wall) {
+            if !place_meeting(x + pers, movep, obj_cover) {
+                y += i;
+            }
+            else if !place_meeting(x - pers, movep, obj_cover) {
+                y += i;
+            }
+        }
+    }
+}
+
+if h_spd > 0 {
+    for (i = h_spd; i > 0; i -= 1;) {
+        movep = x + i;
+        if !place_meeting(movep, y - pers, obj_wall) {
+            if !place_meeting(movep, y - pers, obj_cover) {
+                x += i;
+            }
+            else if !place_meeting(movep, y + pers, obj_cover) {
+                x += i;
+            }
+        }
+        else if !place_meeting(movep, y + pers, obj_wall) {
+            if !place_meeting(movep, y - pers, obj_cover) {
+                x += i;
+            }
+            else if !place_meeting(movep, y + pers, obj_cover) {
+                x += i;
+            }
+        }
+    }
+}
+else if h_spd < 0 {
+    for (i = h_spd; i < 0; i += 1;) {
+        movep = x + i;
+        if !place_meeting(movep, y - pers, obj_wall) {
+            if !place_meeting(movep, y - pers, obj_cover) {
+                x += i;
+            }
+            else if !place_meeting(movep, y + pers, obj_cover) {
+                x += i;
+            }
+        }
+        else if !place_meeting(movep, y + pers, obj_wall) {
+            if !place_meeting(movep, y - pers, obj_cover) {
+                x += i;
+            }
+            else if !place_meeting(movep, y + pers, obj_cover) {
+                x += i;
+            }
+        }
+    }
+}
+
+player_x = x;
+player_y = y;
