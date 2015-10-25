@@ -1,0 +1,119 @@
+temp_node_a = noone;
+temp_node_b = noone;
+
+cl_x = x mod 32;
+cl_y = y mod 32;
+
+if(cl_x <= 16) {
+    grid_sp_x = x div 32;
+}
+else {
+    grid_sp_x = (x div 32) + 1;
+}
+
+if(cl_y <= 16) {
+    grid_sp_y = y div 32;
+}
+else {
+    grid_sp_y = (y div 32) + 1;
+}
+
+node_rm = ds_grid_get(global.grid_rm, grid_sp_x, grid_sp_y);
+
+for (i = 32; i <= 1024; i += 32;) {
+    if place_meeting(x + i, y, obj_wall) {
+        break;
+    }
+    else if place_meeting(x + i, y, obj_cover) {
+        break;
+    }
+    else {
+        temp_node_a = collision_rectangle(x - 16 + i, y - 16, x + 16 + i, y + 16, obj_node_main, false, true);
+        temp_node_b = collision_rectangle(x - 16 + i, y - 16, x + 16 + i, y + 16, obj_node_second, false, true);
+        
+        if temp_node_a != noone {
+            node_rt = temp_node_a;
+            node_rt_tp = "main";
+            break;
+        }
+        else if temp_node_b != noone {
+            node_rt = temp_node_b;
+            node_rt_tp = "second";
+            break;
+        }
+    }
+}
+
+for (i = 32; i <= 1024; i += 32;) {
+    if place_meeting(x - i, y, obj_wall) {
+        break;
+    }
+    else if place_meeting(x - i, y, obj_cover) {
+        break;
+    }
+    else {
+        temp_node_a = collision_rectangle(x - 16 - i, y - 16, x + 16 - i, y + 16, obj_node_main, false, true);
+        temp_node_b = collision_rectangle(x - 16 - i, y - 16, x + 16 - i, y + 16, obj_node_second, false, true);
+        
+        if temp_node_a != noone {
+            node_lt = temp_node_a;
+            node_lt_tp = "main";
+            break;
+        }
+        else if temp_node_b != noone {
+            node_lt = temp_node_b;
+            node_lt_tp = "second";
+            break;
+        }
+    }
+}
+
+for (i = 32; i <= 1024; i += 32;) {
+    if place_meeting(x, y + i, obj_wall) {
+        break;
+    }
+    else if place_meeting(x, y + i, obj_cover) {
+        break;
+    }
+    else {
+        temp_node_a = collision_rectangle(x - 16, y - 16 + i, x + 16, y + 16 + i, obj_node_main, false, true);
+        temp_node_b = collision_rectangle(x - 16, y - 16 + i, x + 16, y + 16 + i, obj_node_second, false, true);
+        
+        if temp_node_a != noone {
+            node_dn = temp_node_a;
+            node_dn_tp = "main";
+            break;
+        }
+        else if temp_node_b != noone {
+            node_dn = temp_node_b;
+            node_dn_tp = "second";
+            break;
+        }
+    }
+}
+
+for (i = 32; i <= 1024; i += 32;) {
+    if place_meeting(x, y - i, obj_wall) {
+        break;
+    }
+    else if place_meeting(x, y - i, obj_cover) {
+        break;
+    }
+    else {
+        temp_node_a = collision_rectangle(x - 16, y - 16 - i, x + 16, y + 16 - i, obj_node_main, false, true);
+        temp_node_b = collision_rectangle(x - 16, y - 16 - i, x + 16, y + 16 - i, obj_node_second, false, true);
+        
+        if temp_node_a != noone {
+            node_up = temp_node_a;
+            node_up_tp = "main";
+            break;
+        }
+        else if temp_node_b != noone {
+            node_up = temp_node_b;
+            node_up_tp = "second";
+            break;
+        }
+    }
+}
+
+cont = true;
