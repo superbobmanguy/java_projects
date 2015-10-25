@@ -1,0 +1,89 @@
+if(nd_wait > 0) {
+    nd_wait -= 1;
+}
+else if(not_dest) {
+    if(path_made) {
+        mv_dist = point_distance(x, y, temp_ary[path_point, 1], temp_ary[path_point, 2]);
+        
+        if(mv_dist > 3) {
+            move_towards_point(temp_ary[path_point, 1], temp_ary[path_point, 2], 3);
+        }
+        else {
+            x = temp_ary[path_point, 1];
+            y = temp_ary[path_point, 2];
+            speed = 0;
+            
+            if(path_point <= 0) {
+                not_dest = false;
+            }
+            else {
+                path_point -= 1;
+            }
+        }
+    }
+    else if(dest_node != noone) {
+        //stack_nd = ds_stack_create();
+        
+        nd_num = 0; //sets size of array to zero
+        node_ary[0] = noone; //sets start of array
+        
+        for(i = 0; i < 360; i += 10;) { //sets angle to to check at 10 degree intervals
+            temp_node = noone; //sets node getter
+            temp_wall = noone; //sets wall getter
+            temp_cover = noone; //sets cover getter
+            
+            for(j = 32; j <= 1024; j += 32;) { //sets distance to check at 32 distance intervals
+                temp_x = lengthdir_x(j, i); //sets the x value to check
+                temp_y = lengthdir_y(j, i); //sets the y value to check
+                
+                temp_node = collision_circle((x + temp_x), (y + temp_y), 16, obj_node_normal, true, true); //checks to see if there is a node at current spot
+                temp_wall = collision_circle((x + temp_x), (y + temp_y), 16, obj_wall, true, true); //checks to see if there is a wall at current spot
+                temp_cover = collision_circle((x + temp_x), (y + temp_y), 16, obj_cover, true, true); //checks to see if there is a cover at current spot
+                
+                if(temp_node != noone) { //if there is a node
+                    new_nd = true; //set node as new
+                    for(k = 0; k < nd_num; k += 1;) { //compare node to already visited nodes
+                        if(temp_node == node_ary[k]) { //if node has already been visited
+                            new_nd = false; //set node as old
+                        }
+                    }
+                    
+                    if((new_nd)&&(temp_node.node_safty == "safe")&&((temp_node.node_type == "normal")||(temp_node.node_type == "patrol"))) { //if node is new and safe
+                        node_ary[nd_num] = temp_node; //add node to list
+                        //ds_stack_push(stack_nd, temp_node);
+                        nd_num += 1; //increment list up
+                        break; //stop looking
+                    }
+                    
+                }
+                else if((temp_wall != noone)||(temp_cover != noone)) { //if wall or cover is found before node
+                    break; //stop looking
+                }
+            }
+        }
+        
+        mv_num = 0;
+        this_enemy = self.id;
+        temp_ary = enemy_path(move_ary, temp_ary, this_enemy, mv_num, dest_node);
+        
+        tp_ary_lg = array_height_2d(temp_ary);
+        
+        //for(k = 0; k < tp_ary_lg; k += 1;) {
+        //    move_ary[k, 0] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 1] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 2] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 3] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 4] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 5] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 6] = temp_ary[(tp_ary_lg - k), 0];
+        //    move_ary[k, 7] = temp_ary[(tp_ary_lg - k), 0];
+        //}
+        
+        path_made = true;
+        path_point = array_height_2d(temp_ary) - 2;
+        mv_ary_lg = array_height_2d(move_ary);
+    }
+    else { //set dest_node
+        dest_node = instance_find(obj_node_dest, 0); //temp code
+    }
+}
