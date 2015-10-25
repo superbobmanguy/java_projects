@@ -1,0 +1,114 @@
+if(wait_sec) { //preforms first actions
+    cl_x = gd_plc_x mod 16;
+    cl_y = gd_plc_y mod 16;
+    
+    if(cl_x <= 8) {
+        grid_sp_x = x div 16;
+    }
+    else {
+        grid_sp_x = (x div 16) + 1;
+    }
+    
+    if(cl_y <= 8) {
+        grid_sp_y = y div 16;
+    }
+    else {
+        grid_sp_y = (y div 16) + 1;
+    }
+    
+    node_room = ds_grid_get(global.grid_rm, grid_sp_x, grid_sp_y); //gets room of node
+    //node_safty = ds_grid_get(global.grid_sf, gd_plc_x, grid_plc_y);
+    //node_room = ds_grid_get(global.grid_rm, gd_plc_x, grid_plc_y);
+    
+    wait_sec = false;
+}
+else if(form_lnk) { //forms links
+    nd_num = 0; //sets array pointer to the beginning
+    
+    for(i = 0; i < 360; i += 10;) { //sets angle to to check at 10 degree intervals
+        temp_node = noone; //sets node getter
+        temp_wall = noone; //sets wall getter
+        temp_cover = noone; //sets cover getter
+        
+        for(j = 16; j <= 1024; j += 16;) { //sets distance to to check at 32 distance intervals
+            temp_x = lengthdir_x(j, i); //sets the x value to check
+            temp_y = lengthdir_y(j, i); //sets the y value to check
+            
+            temp_node = collision_circle((x + temp_x), (y + temp_y), 16, obj_node_normal, true, true);
+            temp_door = collision_circle((x + temp_x), (y + temp_y), 16, obj_node_door, true, true);
+            temp_wall = collision_circle((x + temp_x), (y + temp_y), 16, obj_wall, true, true);
+            temp_cover = collision_circle((x + temp_x), (y + temp_y), 16, obj_cover, true, true);
+            
+            if((temp_wall != noone)||(temp_cover != noone)) {
+                break;
+            }
+            else if(temp_door != noone) {
+                new_nd = true;
+                for(k = 0; k < nd_num; k += 1;) {
+                    if(temp_node == node_ary[k, 0]) {
+                        new_nd = false;
+                    }
+                }
+                
+                if(new_nd) {
+                    node_ary[nd_num, 0] = temp_door;
+                    node_ary[nd_num, 1] = temp_door.x;
+                    node_ary[nd_num, 2] = temp_door.y;
+                    node_ary[nd_num, 3] = point_direction(x, y, temp_door.x, temp_door.y);
+                    node_ary[nd_num, 4] = point_distance(x, y, temp_door.x, temp_door.y);
+                    node_ary[nd_num, 5] = temp_door.node_type;
+                    node_ary[nd_num, 6] = temp_door.node_safty;
+                    node_ary[nd_num, 7] = "safe";
+                    node_ary[nd_num, 8] = temp_door.node_room;
+                    
+                    if(temp_door.node_room != node_room) {
+                        node_door = temp_door;
+                        image_index = 1;
+                    }
+                    
+                    nd_num += 1;
+                    
+                    temp_node = noone;
+                    break;
+                }
+                
+            }
+            else if(temp_node != noone) {
+                new_nd = true;
+                for(k = 0; k < nd_num; k += 1;) {
+                    if(temp_node == node_ary[k, 0]) {
+                        new_nd = false;
+                    }
+                }
+                
+                if(new_nd) {
+                    node_ary[nd_num, 0] = temp_node;
+                    node_ary[nd_num, 1] = temp_node.x;
+                    node_ary[nd_num, 2] = temp_node.y;
+                    node_ary[nd_num, 3] = point_direction(x, y, temp_node.x, temp_node.y);
+                    node_ary[nd_num, 4] = point_distance(x, y, temp_node.x, temp_node.y);
+                    node_ary[nd_num, 5] = temp_node.node_type;
+                    node_ary[nd_num, 6] = temp_node.node_safty;
+                    node_ary[nd_num, 7] = "safe";
+                    node_ary[nd_num, 8] = temp_node.node_room;
+                    
+                    //if(temp_node.node_room != node_room) {
+                    //    node_door = temp_node;
+                    //    image_index = 1;
+                    //}
+                    
+                    nd_num += 1;
+                    
+                    temp_node = noone;
+                    break;
+                }
+                
+            }
+        }
+    }
+    
+    form_lnk = false;
+}
+else {
+    //make paths to other doors
+}
