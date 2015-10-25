@@ -1,0 +1,416 @@
+if(make_rms) {  //grid set up at room start
+    cnger = 0;  //starts the changable array
+    
+    for(i = 0; i < global.gd_wt; i += 1;) {  //fills in walls cover and doors into grids
+        for(j = 0; j < global.gd_ht; j += 1;) {
+            tmp_x = (i * siz) + in_dis;
+            tmp_y = (j * siz) + in_dis;
+            grd_len = siz - 1;
+            temp_wall = collision_rectangle( tmp_x + 1, tmp_y + 1, tmp_x + grd_len, tmp_y + grd_len, obj_wall, false, true);
+            temp_cover = collision_rectangle( tmp_x + 1, tmp_y + 1, tmp_x + grd_len, tmp_y + grd_len, obj_cover, false, true);
+            temp_player = collision_rectangle( tmp_x + 1, tmp_y + 1, tmp_x + grd_len, tmp_y + grd_len, obj_unit_basic, false, true);
+            temp_enemy = collision_rectangle( tmp_x + 1, tmp_y + 1, tmp_x + grd_len, tmp_y + grd_len, obj_enemy, false, true);
+            temp_door = collision_rectangle( tmp_x + 1, tmp_y + 1, tmp_x + grd_len, tmp_y + grd_len, obj_door, false, true);
+            
+            stack_obj = ds_stack_create();
+            
+            if(temp_wall != noone) { //fills walls
+                if((temp_wall.x > tmp_x)&&(temp_wall.x < (tmp_x + siz))&&(temp_wall.y > tmp_y)&&(temp_wall.y < (tmp_y + siz))) { //fills walls center
+                    ds_grid_set(global.grid_pl, i, j, "wall");
+                    ds_grid_set(global.grid_id, i, j, temp_wall);
+                    ds_grid_set(global.grid_rm, i, j, "wall");
+                    ds_grid_set(global.grid_sf, i, j, "wall");
+                    ds_grid_set(global.grid_ch, i, j, "wall");
+                }
+                else { //fills walls sides
+                    ds_grid_set(global.grid_pl, i, j, "par wall");
+                    ds_grid_set(global.grid_id, i, j, noone);
+                    ds_grid_set(global.grid_rm, i, j, "wall");
+                    ds_grid_set(global.grid_sf, i, j, "safe");
+                    ds_grid_set(global.grid_ch, i, j, "can't");
+                    
+                    ds_stack_push(stack_obj, i, j);
+                }
+                
+                if((temp_wall.brk)||(temp_wall.mov)) {
+                    change_ary[cnger, 0] = i;
+                    change_ary[cnger, 1] = j;
+                    cnger += 1;
+                }
+            }
+            else if(temp_cover != noone) { //fills cover
+                if((temp_cover.x > tmp_x)&&(temp_cover.x < (tmp_x + siz))&&(temp_cover.y > tmp_y)&&(temp_cover.y < (tmp_y + siz))) { //fills cover center
+                    ds_grid_set(global.grid_pl, i, j, "cover");
+                    ds_grid_set(global.grid_id, i, j, temp_cover);
+                    ds_grid_set(global.grid_rm, i, j, "cover");
+                    ds_grid_set(global.grid_sf, i, j, "cover");
+                    ds_grid_set(global.grid_ch, i, j, "cover");
+                }
+                else { //fills cover sides
+                    ds_grid_set(global.grid_pl, i, j, "par cover");
+                    ds_grid_set(global.grid_id, i, j, noone);
+                    ds_grid_set(global.grid_rm, i, j, "cover");
+                    ds_grid_set(global.grid_sf, i, j, "safe");
+                    ds_grid_set(global.grid_ch, i, j, "can't");
+                    
+                    ds_stack_push(stack_obj, i, j);
+                }
+                
+                if((temp_cover.brk)||(temp_cover.mov)) {
+                    change_ary[cnger, 0] = i;
+                    change_ary[cnger, 1] = j;
+                    cnger += 1;
+                }
+            }
+            else if(temp_door != noone) { //fills doors
+                
+                if((temp_door.x > tmp_x)&&(temp_door.x < (tmp_x + siz))&&(temp_door.y > tmp_y)&&(temp_door.y < (tmp_y + siz))) { //fills doors center
+                    ds_grid_set(global.grid_pl, i, j, "door");
+                    ds_grid_set(global.grid_id, i, j, temp_door);
+                    ds_grid_set(global.grid_rm, i, j, "door");
+                    ds_grid_set(global.grid_sf, i, j, "safe");
+                    ds_grid_set(global.grid_ch, i, j, "can't");
+                }
+                else { //fills doors sides
+                    ds_grid_set(global.grid_pl, i, j, "par door");
+                    ds_grid_set(global.grid_id, i, j, noone);
+                    ds_grid_set(global.grid_rm, i, j, "door");
+                    ds_grid_set(global.grid_sf, i, j, "safe");
+                    ds_grid_set(global.grid_ch, i, j, "can't");
+                    
+                    ds_stack_push(stack_obj, i, j);
+                }
+                
+                change_ary[cnger, 0] = i;
+                change_ary[cnger, 1] = j;
+                cnger += 1;
+            }
+            else { //fills empty
+                ds_grid_set(global.grid_pl, i, j, "empty");
+                ds_grid_set(global.grid_id, i, j, noone);
+                ds_grid_set(global.grid_rm, i, j, "empty");
+                ds_grid_set(global.grid_sf, i, j, "safe");
+                ds_grid_set(global.grid_ch, i, j, "can't");
+                
+                change_ary[cnger, 0] = i;
+                change_ary[cnger, 1] = j;
+                cnger += 1;
+            }
+        }
+    }
+    
+    while(ds_stack_empty(stack_obj) == false) { //adds bet
+        obj_y = ds_stack_pop(stack_obj);
+        obj_x = ds_stack_pop(stack_obj);
+        
+        if(ds_grid_get(global.grid_pl, obj_x, obj_y) == "par wall") {
+            obj_fin = "wall";
+            obj_rep = "bet wall";
+        }
+        else if(ds_grid_get(global.grid_pl, obj_x, obj_y) == "par cover") {
+            obj_fin = "cover";
+            obj_rep = "bet cover";
+        }
+        else if(ds_grid_get(global.grid_pl, obj_x, obj_y) == "par door") {
+            obj_fin = "door";
+            obj_rep = "bet door";
+        }
+        else {
+            obj_fin = "empty";
+            obj_rep = "empty";
+        }
+        
+        if((obj_x > 0)&&(obj_x < global.gd_wt)&&(obj_y > 0)&&(obj_y < global.gd_ht)) {
+            if(((ds_grid_get(global.grid_pl, obj_x + 1, obj_y) == obj_fin)&&(ds_grid_get(global.grid_pl, obj_x - 1, obj_y) == obj_fin))||((ds_grid_get(global.grid_pl, obj_x, obj_y + 1) == obj_fin)&&(ds_grid_get(global.grid_pl, obj_x, obj_y - 1) == obj_fin))) {
+                ds_grid_set(global.grid_pl, obj_x, obj_y, obj_rep);
+                //ds_grid_set(global.grid_rm, obj_x, obj_y, obj_rep);
+            }
+        }
+    }
+    
+    ds_stack_destroy(stack_obj);
+    room_num = 1;
+
+    for(i = 2; i < global.gd_wt - 2; i += 1;) {
+        for(j = 2; j < global.gd_ht - 2; j += 1;) {
+            temp_obj = ds_grid_get(global.grid_rm, i, j);
+            
+            if(temp_obj == "empty") {
+                this_rm = "rm" + string(room_num);
+                room_num += 1;
+                fill_rm = true;
+                
+                stack_rm = ds_stack_create();
+                ds_stack_push(stack_rm, i, j);
+                
+                //ds_grid_set(global.grid_rm, i, j, this_rm);
+                
+                while(ds_stack_empty(stack_rm) == false) {
+                    room_y = ds_stack_pop(stack_rm);
+                    room_x = ds_stack_pop(stack_rm);
+                    temp_obj_a = ds_grid_get(global.grid_rm, room_x + 1, room_y);
+                    temp_obj_b = ds_grid_get(global.grid_rm, room_x - 1, room_y);
+                    temp_obj_c = ds_grid_get(global.grid_rm, room_x, room_y + 1);
+                    temp_obj_d = ds_grid_get(global.grid_rm, room_x, room_y - 1);
+                    
+                    if(room_x < global.gd_wt - 1) {
+                        if(temp_obj_a == "empty") {
+                            ds_grid_set(global.grid_rm, room_x + 1, room_y, this_rm);
+                            ds_stack_push(stack_rm, room_x + 1, room_y);
+                        }
+                    }
+                    
+                    if(room_x > 1) {
+                        if(temp_obj_b == "empty") {
+                            ds_grid_set(global.grid_rm, room_x - 1, room_y, this_rm);
+                            ds_stack_push(stack_rm, room_x - 1, room_y);
+                        }
+                    }
+                    
+                    if(room_y < global.gd_ht - 1) {
+                        if(temp_obj_c == "empty") {
+                            ds_grid_set(global.grid_rm, room_x, room_y + 1, this_rm);
+                            ds_stack_push(stack_rm, room_x, room_y + 1);
+                        }
+                    }
+                    
+                    if(room_y > 1) {
+                        if(temp_obj_d == "empty") {
+                            ds_grid_set(global.grid_rm, room_x, room_y - 1, this_rm);
+                            ds_stack_push(stack_rm, room_x, room_y - 1);
+                        }
+                    }
+                    
+                    //if(ds_grid_get(global.grid_rm, room_x, room_y) == "empty") {
+                    //    ds_grid_set(global.grid_rm, i, j, this_rm);
+                    //    ds_stack_push(stack_rm, room_x + 1, room_y);
+                    //    ds_stack_push(stack_rm, room_x - 1, room_y);
+                    //    ds_stack_push(stack_rm, room_x, room_y + 1);
+                    //    ds_stack_push(stack_rm, room_x, room_y - 1);
+                    //}
+                    
+                    //if(ds_stack_empty(stack_rm)) {
+                    //    fill_rm = false;
+                    //}
+                }
+                
+                ds_stack_destroy(stack_rm);
+            }
+        }
+    }
+}
+
+make_rms = false;  //ends grid setup at start
+
+ary_ln = array_length_1d(player_ary);
+for(k = 0; k < ary_ln; k += 1;) {
+    temp_plr = player_ary[k];
+    for(i = 0; i < global.gd_wt; i += 1;) {
+        for(j = 0; j < global.gd_ht; j += 1;) {
+            grid_x = (i * 32) + 16;
+            grid_y = (j * 32) + 16;
+            
+            
+            if(grid_x < temp_plr.x) {
+                dis_x = temp_plr.x - grid_x;
+            }
+            else {
+                dis_x = grid_x - temp_plr.x;
+            }
+            
+            if(grid_y < temp_plr.y) {
+                dis_y = temp_plr.y - grid_y;
+            }
+            else {
+                dis_y = grid_y - temp_plr.y;
+            }
+            
+            temp_wl = ds_grid_get(global.grid_pl, i, j);
+            
+            if(temp_wl == "wall") {
+                ds_grid_set(global.grid_sf, i, j, "wall");
+            }
+            else if(temp_wl == "cover") {
+                ds_grid_set(global.grid_sf, i, j, "cover");
+            }
+            //else if(collision_line(grid_x, grid_y, temp_plr.x, temp_plr.y, obj_wall, false, true)) {
+            //    ds_grid_set(global.grid_sf, i, j, "safe");
+            //}
+            else if(!collision_line(grid_x, grid_y, temp_plr.x, temp_plr.y, obj_wall, false, true)) {
+                dir = point_direction(grid_x, grid_y, temp_plr.x, temp_plr.y);
+                plr_dir = point_direction(temp_plr.x, temp_plr.y, grid_x, grid_y);
+                
+                
+                up_ang = temp_plr.guy_angle + 30;
+                
+                if(up_ang >= 360) {
+                    up_ang -= 360;
+                    
+                    if((plr_dir >= temp_plr.guy_angle)||(plr_dir <= up_ang)) {
+                        is_up = true;
+                    }
+                    else {
+                        is_up = false;
+                    }
+                }
+                else {
+                    if((plr_dir >= temp_plr.guy_angle)&&(plr_dir <= up_ang)) {
+                        is_up = true;
+                    }
+                    else {
+                        is_up = false;
+                    }
+                }
+                
+                
+                down_ang = temp_plr.guy_angle - 30;
+                
+                if(down_ang < 0) {
+                    down_ang += 360;
+                    
+                    if((plr_dir <= temp_plr.guy_angle)||(plr_dir >= down_ang)) {
+                        is_dn = true;
+                    }
+                    else {
+                        is_dn = false;
+                    }
+                }
+                else {
+                    if((plr_dir <= temp_plr.guy_angle)&&(plr_dir >= down_ang)) {
+                        is_dn = true;
+                    }
+                    else {
+                        is_dn = false;
+                    }
+                }
+                
+                
+                dis_fin = sqrt((dis_x * dis_x) + (dis_y * dis_y));
+                
+                if(dis_fin > 96) {
+                    far_x = lengthdir_x(48, dir);
+                    far_y = lengthdir_y(48, dir);
+                    
+                    hit_x = lengthdir_x(48, plr_dir);
+                    hit_y = lengthdir_y(48, plr_dir);
+                    
+                    if(collision_line(temp_plr.x, temp_plr.y, temp_plr.x + hit_x, temp_plr.y + hit_y, obj_cover, false, true)) {
+                        ds_grid_set(global.grid_ch, i, j, "partial");
+                    }
+                    else {
+                        ds_grid_set(global.grid_ch, i, j, "can");
+                    }
+                    
+                    //if(collision_line(grid_x, grid_y, grid_x + far_x, grid_y + far_y, obj_cover, false, true)) {
+                    //    ds_grid_set(global.grid_sf, i, j, "safe");
+                    //}
+                    //else {
+                    //    ds_grid_set(global.grid_sf, i, j, "unsafe");
+                    //}
+                    
+                    temp_issf = ds_grid_get(global.grid_sf, i, j);
+                    
+                    if(!collision_line(grid_x, grid_y, grid_x + far_x, grid_y + far_y, obj_cover, false, true)) {
+                        if((temp_issf != "unsafe")&&(is_up == false)&&(is_dn == false)) {
+                            ds_grid_set(global.grid_sf, i, j, "safe_d");
+                        }
+                        else {
+                            ds_grid_set(global.grid_sf, i, j, "unsafe");
+                        }
+                    }
+                    else if(temp_issf != "unsafe") {
+                        if((is_up)||(is_dn)) {
+                            ds_grid_set(global.grid_sf, i, j, "safe_b");
+                        }
+                        else {
+                            ds_grid_set(global.grid_sf, i, j, "safe_a");
+                        }
+                    }
+                }
+                else {
+                    ds_grid_set(global.grid_sf, i, j, "unsafe");
+                    ds_grid_set(global.grid_ch, i, j, "can");
+                    
+                    //ds_grid_set(global.grid_sf, i, j, "pie");
+                    //ds_grid_set(global.grid_ch, i, j, "pie");
+                }
+                
+            }
+        }
+    }
+}
+
+for(i = 0; i < global.gd_wt; i += 1;) {
+    for(j = 0; j < global.gd_ht; j += 1;) {
+        temp_issf = ds_grid_get(global.grid_sf, i, j);
+        
+        if(temp_issf == "safe_d") {
+            for(m = -1; m <= 1; m += 1;) {
+                for(n = -1; n <= 1; n += 1;) {
+                    temp_ntsf = ds_grid_get(global.grid_sf, i + m, j + n);
+                    
+                    if((temp_ntsf == "safe")) {
+                        ds_grid_set(global.grid_sf, i, j, "safe_c");
+                    }
+                    else if((temp_ntsf != "wall")&&(temp_ntsf != "cover")) {
+                        temp_mbsf = "unsafe";
+                        
+                        if(m == 0) {
+                            temp_mbsf = ds_grid_get(global.grid_sf, i, j + n + n);
+                        }
+                        else if(n == 0) {
+                            temp_mbsf = ds_grid_get(global.grid_sf, i + m + m, j);
+                        }
+                        
+                        if((temp_mbsf == "safe")) {
+                            ds_grid_set(global.grid_sf, i, j, "safe_c");
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+drw = true;
+
+//||(temp_ntsf == "safe_a")||(temp_ntsf == "safe_b")
+
+
+            //else if(temp_player != noone) {
+            //    ds_grid_set(global.grid_pl, i, j, "player");
+            //    ds_grid_set(global.grid_id, i, j, temp_player);
+            //    if(make_rms) {
+            //        ds_grid_set(global.grid_rm, i, j, "empty");
+            //    }
+            //    
+            //    ds_grid_set(global.grid_sf, i, j, "safe");
+            //    ds_grid_set(global.grid_ch, i, j, "can't");
+            //    
+            //    if(player_ary[0] == noone) {
+            //        player_ary[0] = temp_player;
+            //    }
+            //    else {
+            //        new_plr = true
+            //        ary_ln = array_length_1d(player_ary);
+            //        for(k = 0; k < ary_ln; k += 1;) {
+            //            if(temp_player == player_ary[k]) {
+            //                new_plr = false;
+            //            }
+            //        }
+            //        
+            //        if(new_plr) {
+            //            player_ary[ary_ln] = temp_player;
+            //        }
+            //    }
+            //}
+            //else if(temp_enemy != noone) {
+            //    ds_grid_set(global.grid_pl, i, j, "enemy");
+            //    ds_grid_set(global.grid_id, i, j, temp_enemy);
+            //    if(make_rms) {
+            //        ds_grid_set(global.grid_rm, i, j, "empty");
+            //    }
+            //    
+            //    ds_grid_set(global.grid_sf, i, j, "safe");
+            //    ds_grid_set(global.grid_ch, i, j, "can't");
+            //}
