@@ -1,0 +1,21 @@
+function setData(name, value, exp) {
+    var tim = new Date();
+    tim.setTime(tim.getTime() + (exp*24*3600*1000));
+    document.cookie = name + "=" + value + "; " + "expires=" + tim.toUTCString();
+}
+
+function getData(name) {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        for (var j = 0; j < cookies[i].length; j++) {
+            if (cookies[i].indexOf(name + "=") == j) {
+                return cookies[i].substring(j + name.length + 1, cookies[i].length)
+            }
+        }
+    }
+}
+
+function length() {
+    var cookies = document.cookie.split(';');
+    return cookies.length;
+}
