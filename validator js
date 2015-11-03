@@ -1,0 +1,69 @@
+var regexes = [];
+regexes[0] = /^[a-z_\$][a-z0-9_\$]*$/i;
+regexes[1] = /^(\(?[2-9]\d{2}\)?(-| )?)?\d{3}(-| )?\d{4}$/;
+regexes[2] = /^[a-z0-9\.\\\$_\-]*[a-z0-9]+@[a-z0-9\.\\\$_\-]*[a-z0-9][.com|.net|.org|.edu]$/;
+regexes[3] = /^(1[0-2]|0?[1-9])(\/| )(3[01]|[0-2]?[0-9])(\/| )[0-9]+$/
+regexes[4] = /^e0[0-9]{7}$/i
+
+function javaident() {
+	var tested = document.getElementById('javai').value;
+	var answ = document.getElementById('javaia');
+	if(regexes[0].test(tested)) {
+		answ.innerHTML = 'yes';
+	}
+	else {
+		answ.innerHTML = 'no';
+	}
+}
+function phonenum() {
+	var tested = document.getElementById('phone').value;
+	var answ = document.getElementById('phonea');
+	if(regexes[1].test(tested)) {
+		answ.innerHTML = 'yes';
+	}
+	else {
+		answ.innerHTML = 'no';
+	}
+}
+function email() {
+	var tested = document.getElementById('email').value;
+	var answ = document.getElementById('emaila');
+	if(regexes[2].test(tested)) {
+		answ.innerHTML = 'yes';
+	}
+	else {
+		answ.innerHTML = 'no';
+	}
+}
+function date() {
+	var tested = document.getElementById('date').value;
+	var answ = document.getElementById('datea');
+	if(regexes[3].test(tested)) {
+		answ.innerHTML = 'yes';
+	}
+	else {
+		answ.innerHTML = 'no';
+	}
+}
+function eid() {
+	var tested = document.getElementById('eid').value;
+	var answ = document.getElementById('eida');
+	if(regexes[4].test(tested)) {
+		answ.innerHTML = 'yes';
+	}
+	else {
+		answ.innerHTML = 'no';
+	}
+}
+function dbl() {
+	var tested = document.getElementById('wrd').value;
+	var tester = document.getElementById('rgx').value;
+	var answ = document.getElementById('dbla');
+	var rgx = new RegExp(tester);
+	if(rgx.test(tested)) {
+		answ.innerHTML = 'yes';
+	}
+	else {
+		answ.innerHTML = 'no';
+	}
+}
