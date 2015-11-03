@@ -1,0 +1,42 @@
+var body = document.body;
+var menu = document.getElementById('assist-menu');
+menu.style.visibility = 'hidden';
+var visible = false;
+var gray = false;
+
+var font_size = 100;
+			
+function show() {
+	if(visible == false) {
+		menu.style.visibility = 'visible';
+		visible = true;
+	}
+	else {
+		menu.style.visibility = 'hidden';
+		visible = false;
+	}
+}
+
+function big() {
+	font_size += 10;
+	body.style.fontSize = font_size + "%";
+}
+function small() {
+	if(font_size > 0) {
+		font_size -= 10;
+		body.style.fontSize = font_size + "%";
+	}
+}
+
+function grays() {
+	if(gray == false) {
+		body.style.webkitfilter = 'grayscale(100%)';
+		body.style.filter = 'grayscale(100%)';
+		gray = true;
+	}
+	else {
+		body.style.webkitfilter = 'grayscale(0%)';
+		body.style.filter = 'grayscale(0%)';
+		gray = false;
+	}
+}
