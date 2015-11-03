@@ -1,0 +1,19 @@
+var body = document.body;
+
+var num = Math.floor((Math.random() * 100) + 1);
+
+var response = document.getElementsByClassName('yellow')[0];
+
+function numchecker() {
+	var guess = document.getElementsByName('guess')[0].value;
+	
+	if(guess > num) {
+		response.innerHTML = 'Too high';
+	}
+	else if(guess < num) {
+		response.innerHTML = 'Too low';
+	}
+	else {
+		response.innerHTML = 'Correct';
+	}
+}
