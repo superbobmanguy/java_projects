@@ -1,0 +1,58 @@
+var body = document.body;
+var change = [];
+var changed = [];
+var groot = true;
+change[0] = document.getElementsByTagName("h1");
+change[1] = document.getElementsByTagName("h2");
+change[2] = document.getElementsByTagName("p");
+change[3] = document.getElementsByTagName("td");
+change[4] = document.getElementsByTagName("caption");
+var input = document.getElementsByTagName("input");
+var inputed = [];
+
+function translate() {
+    var word = document.getElementsByName('translate')[0];
+    word.value = 'I am Groot';
+}
+
+function grootify() {
+    var i;
+    var j;
+    
+    for (i = 0; i < change.length; i++) {
+        if (groot) {
+            changed[i] = [];
+        }
+        for (j = 0; j < change[i].length; j++) {
+            if (groot) {
+                changed[i][j] = change[i][j].innerHTML;
+                if (change[i][j].id == 'img') {
+                    change[i][j].innerHTML = '<img id="image" src="club images/groot.png" height="160" width="160" alt="row" />';
+                }
+                else {
+                    change[i][j].innerHTML = 'I am Groot';
+                }
+            }
+            else {
+                change[i][j].innerHTML = changed[i][j];
+            }
+        }
+    }
+    
+    for (i = 0; i < input.length; i++) {
+        if (groot) {
+            inputed[i] = input[i].value;
+            input[i].value = 'I am Groot';
+        }
+        else {
+            input[i].value = inputed[i];
+        }
+    }
+    
+    if (groot) {
+        groot = false;
+    }
+    else {
+        groot = true;
+    }
+}
